@@ -80,8 +80,7 @@ $(function () {
                 window.location.href = "/admin/home.html";
             },
             error: function () {
-                //TODO 登入失败需要提示用户
-                console.log("登入失败")
+                $("#element").toast('show')
             }
         })
     });

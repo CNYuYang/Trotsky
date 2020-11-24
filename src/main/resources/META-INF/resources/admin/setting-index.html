@@ -10,7 +10,6 @@
     <link href="../css/all.min.css" rel="stylesheet" type="text/css">
     <link href="../css/nunito.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 
 <body id="page-top">
@@ -79,6 +78,7 @@
         <!-- Divider -->
         <hr class="sidebar-divider">
 
+        <!-- Heading -->
         <div class="sidebar-heading">
             设置
         </div>
@@ -171,94 +171,67 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
+
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">关于</h1>
+                    <h1 class="h3 mb-0 text-gray-800">主页设置</h1>
                 </div>
+
                 <!-- Content Row -->
                 <div class="row">
-                    <div class="col-lg-12 mb-4">
-
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">关于作者</h6>
-                            </div>
-                            <div class="card-body">
-
-                                <p>昵称：阳哥在奔跑</p>
-
-                                <p>邮箱📮：744727849@qq.com</p>
-
-                                <p>博客：<a target="_blank" rel="nofollow" href="https://yuyang.run">https://yuyang.run</a>
-                                </p>
-
-                                <p>Github： <a target="_blank" rel="nofollow"
-                                              href="https://github.com/CNYuYang">CNYuYang</a></p>
-
-                                <p>地址：湖北武汉</p>
-
-                                <p></p>
-
-                                <a target="_blank" rel="nofollow" href="https://yuyang.run/">访问我的博客 &rarr;</a>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div class="row">
 
                     <div class="col-lg-12 mb-4">
 
                         <!-- Illustrations -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">关于Trotsky项目</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">全局设置</h6>
                             </div>
                             <div class="card-body">
-
-                                <p>后端框架：quarkus、vert.x </p>
-
-                                <p>前端框架：docsify </p>
-
-                                <p>编译工具：graalvm、native-image </p>
-
-                                <p>构建工具：gradle </p>
-
-                                <p>
-                                    技术特点：使用graalvm、native-image可以将Java编译成二进制可执行文件，大大提升启动速度、运行内存。使用quarkus、vert.x作为后端框架，积极拥抱响应式，性能约为Spring的4-10倍。</p>
-
-                                <p>功能特点：以文件树的形式展示文档。适用于用此做笔记的用户。</p>
-
-                                <a target="_blank" rel="nofollow" href="https://github.com/cnyuyang/trotsky">访问项目主页
-                                    &rarr;</a>
+                                <div class="form-group">
+                                    <label>网站标题Title</label>
+                                    <input class="form-control" id="input_title"
+                                           aria-describedby="titleHelp" placeholder="Trotsky-Blog">
+                                    <small id="titleHelp"
+                                           class="form-text text-muted">网站标题就是会被显示在浏览器tab上的那一小段文字😄</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>导航Navs</label>
+                                    <br>
+                                    <input style="width: 40% ; display: inline" class="form-control" placeholder="展示文字">
+                                    - <input style="width: 40% ; display: inline" class="form-control"
+                                             placeholder="实际连接🔗">
+                                    <button style="margin-left: 10px" class="btn btn-danger">删除该条导航</button>
+                                    <small class="form-text text-muted">导航就是所有页面右上角，每个页面都会有的快速导航。</small>
+                                    <button style="margin-top: 10px" class="btn btn-primary">添加一条导航</button>
+                                </div>
                             </div>
                         </div>
 
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 mb-4">
-                        <!-- Illustrations -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">关于Trotsky先知</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">封面设置</h6>
                             </div>
                             <div class="card-body">
-
-                                <p>全名：列夫·达维多维奇·托洛茨基 </p>
-
-                                <p>主要成就：布尔什维克主要领导人、十月革命指挥者、苏联红军缔造者和第四国际精神领袖，是一名革命家、军事家、政治理论家和作家。 </p>
-
-                                <p>Trotsky主义：托洛茨基从他的“不断革命论”出发提倡无产阶级革命，认为在资产阶级民主主义革命未取得彻底成功的国家（如1917年之前的俄国），无产阶级必须永久无间地坚持社会革命（“社会主义”或“共产主义”革命）。</p>
-
-                                <a target="_blank" rel="nofollow" href="https://github.com/cnyuyang/trotsky">访问项目主页
-                                    &rarr;</a>
+                                <div class="form-group">
+                                    <label>个人描述</label>
+                                    <input class="form-control" id="input_des" placeholder="布尔什维克 & 第四国际精神领袖">
+                                    <small class="form-text text-muted">个人描述就是在Logo下面一段简单的介绍</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>链接Links</label>
+                                    <br>
+                                    <input style="width: 40% ; display: inline" class="form-control" placeholder="展示文字">
+                                    - <input style="width: 40% ; display: inline" class="form-control"
+                                             placeholder="实际连接🔗">
+                                    <button style="margin-left: 10px" class="btn btn-danger">删除该条链接</button>
+                                    <small class="form-text text-muted">链接就是，在首页Logo下面的下面那几个可以跳转的按钮🔘</small>
+                                    <button style="margin-top: 10px" class="btn btn-primary">添加一条链接</button>
+                                </div>
                             </div>
                         </div>
 
+                        <button style="float:right; " class="btn btn-success">保存设置</button>
 
                     </div>
                 </div>
@@ -319,7 +292,6 @@
 
 <!-- Page level plugins -->
 <script src="../js/Chart.min.js"></script>
-
 <!-- Page level custom scripts -->
 <script src="../js/demo/chart-area-demo.js"></script>
 <script src="../js/demo/chart-pie-demo.js"></script>
