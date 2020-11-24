@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author YuYang
  */
-@Path("/md")
+@Path("/admin/md")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class MarkDownResource {

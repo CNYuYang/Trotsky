@@ -61,14 +61,18 @@ public class AdminResource {
     @Path("/info")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response nickName() throws ParseException {
-        HomeInfo info = new HomeInfo();
-        info.setNickName(confService.getUserConf().getNickName());
-        info.setNoteCount(confService.getCountConf().getNoteCount());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date buildTime = format.parse(confService.getUserConf().getBuildTime());
-        info.setDay(DateUtils.differentDays(buildTime,new Date()));
-        return ResUtils.success(info);
+    public Response info(@CookieParam("uuid") String uuid) throws ParseException {
+        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+            return ResUtils.failure("No Authenticate");
+        } else {
+            HomeInfo info = new HomeInfo();
+            info.setNickName(confService.getUserConf().getNickName());
+            info.setNoteCount(confService.getCountConf().getNoteCount());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date buildTime = format.parse(confService.getUserConf().getBuildTime());
+            info.setDay(DateUtils.differentDays(buildTime, new Date()));
+            return ResUtils.success(info);
+        }
     }
 
 }

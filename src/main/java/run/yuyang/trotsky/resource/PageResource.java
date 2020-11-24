@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author YuYang
  */
-@Path("/page")
+@Path("/admin/page")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PageResource {

@@ -1,4 +1,4 @@
-package run.yuyang.trotsky.model.conf;
+package run.yuyang.trotsky.model.base;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
