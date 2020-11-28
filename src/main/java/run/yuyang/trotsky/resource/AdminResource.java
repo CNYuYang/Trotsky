@@ -2,11 +2,11 @@ package run.yuyang.trotsky.resource;
 
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;
-import run.yuyang.trotsky.commom.utils.DateUtils;
 import run.yuyang.trotsky.commom.utils.ResUtils;
+import run.yuyang.trotsky.model.conf.IndexConf;
 import run.yuyang.trotsky.model.request.LoginParam;
-import run.yuyang.trotsky.model.response.HomeInfo;
 import run.yuyang.trotsky.service.ConfService;
+import run.yuyang.trotsky.service.PageService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -14,8 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -29,6 +27,9 @@ public class AdminResource {
 
     @Inject
     ConfService confService;
+
+    @Inject
+    PageService pageService;
 
     @GET()
     @Produces(MediaType.TEXT_HTML)
@@ -58,21 +59,41 @@ public class AdminResource {
     }
 
     @GET
-    @Path("/info")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/info/nickName")
     @Produces(MediaType.APPLICATION_JSON)
     public Response info(@CookieParam("uuid") String uuid) throws ParseException {
         if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
             return ResUtils.failure("No Authenticate");
         } else {
-            HomeInfo info = new HomeInfo();
-            info.setNickName(confService.getUserConf().getNickName());
-            info.setNoteCount(confService.getCountConf().getNoteCount());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date buildTime = format.parse(confService.getUserConf().getBuildTime());
-            info.setDay(DateUtils.differentDays(buildTime, new Date()));
-            return ResUtils.success(info);
+            return ResUtils.success(confService.getUserConf().getNickName());
         }
     }
+
+    @Path("/setting")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    public Response getSetting(@CookieParam("uuid") String uuid) {
+        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+            return ResUtils.failure("No Authenticate");
+        } else {
+            return ResUtils.success(confService.getIndexConf());
+        }
+    }
+
+    @Path("/setting")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PUT
+    public Response changeSetting(@CookieParam("uuid") String uuid, IndexConf indexConf) {
+        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+            return ResUtils.failure("No Authenticate");
+        } else {
+            confService.setIndexConf(indexConf);
+            confService.saveIndexConf();
+            pageService.updateCoverPage();
+            pageService.updateIndexPage();
+            return ResUtils.success(indexConf);
+        }
+    }
+
 
 }

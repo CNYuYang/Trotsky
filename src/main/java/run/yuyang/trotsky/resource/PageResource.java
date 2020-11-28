@@ -31,15 +31,6 @@ public class PageResource {
     }
 
     @GET
-    @Path("/cover")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String randomCoverPage() {
-        String notesTree = pageService.updateCoverPage();
-        System.out.println(notesTree);
-        return notesTree;
-    }
-
-    @GET
     @Path("/auto")
     @Produces(MediaType.APPLICATION_JSON)
     public Map auto() {

@@ -124,6 +124,10 @@ public class ConfService {
         vertx.fileSystem().writeFileBlocking(workerPath + "/.trotsky/count.json", Buffer.buffer(JsonObject.mapFrom(countConf).toString() + "\n"));
     }
 
+    public void saveIndexConf() {
+        vertx.fileSystem().writeFileBlocking(workerPath + "/.trotsky/index.json", Buffer.buffer(JsonObject.mapFrom(indexConf).toString() + "\n"));
+    }
+
     public void addNoteConfAndSave(NoteConf noteConf) {
         addNoteConf(noteConf);
         saveNoteConf();

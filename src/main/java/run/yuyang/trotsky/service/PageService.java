@@ -1,6 +1,7 @@
 package run.yuyang.trotsky.service;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.NoteConf;
 
@@ -145,7 +146,7 @@ public class PageService {
         return builder;
     }
 
-    public String updateCoverPage() {
+    public void updateCoverPage() {
         String template = fileService.readFile("template/_coverpage.md");
         template = template.replace("{{description}}", confService.getIndexConf().getDescription());
         StringBuilder builder = new StringBuilder();
@@ -153,7 +154,19 @@ public class PageService {
             builder.append("[").append(obj.getKey()).append("]").append("(").append(obj.getValue()).append(") ");
         });
         template = template.replace("{{links}}", builder.toString());
-        return template;
+        vertx.fileSystem().writeFileBlocking(confService.getWorkerPath() + "/_coverpage.md", Buffer.buffer(template));
+    }
+
+    public void updateIndexPage() {
+        String template = fileService.readFile("template/index.html");
+        template = template.replace("{{title}}", confService.getIndexConf().getTitle());
+        StringBuilder builder = new StringBuilder();
+        confService.getIndexConf().getNavs().forEach(obj -> {
+            //<a href="#/notes">笔记</a>
+            builder.append("<a href=\"").append(obj.getValue()).append("\">").append(obj.getKey()).append("</a>");
+        });
+        template = template.replace("{{navs}}", builder.toString());
+        vertx.fileSystem().writeFileBlocking(confService.getWorkerPath() + "/index.html", Buffer.buffer(template));
     }
 
 

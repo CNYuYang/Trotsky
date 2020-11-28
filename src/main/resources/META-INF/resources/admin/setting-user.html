@@ -10,6 +10,7 @@
     <link href="../css/all.min.css" rel="stylesheet" type="text/css">
     <link href="../css/nunito.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/fileinput.min.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -82,7 +83,7 @@
         <div class="sidebar-heading">
             设置
         </div>
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
@@ -98,8 +99,8 @@
             </div>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link" href="tables.html">
+        <li class="nav-item active">
+            <a class="nav-link" href="setting-user.html">
                 <i class="fas fa-fw fa-table"></i>
                 <span>用户设置</span></a>
         </li>
@@ -174,7 +175,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">主页设置</h1>
+                    <h1 class="h3 mb-0 text-gray-800">用户设置</h1>
                 </div>
 
                 <!-- Content Row -->
@@ -185,49 +186,13 @@
                         <!-- Illustrations -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">全局设置</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">头像设置</h6>
                             </div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label>网站标题Title</label>
-                                    <input class="form-control" id="input_title"
-                                           aria-describedby="titleHelp" placeholder="Trotsky-Blog">
-                                    <small id="titleHelp"
-                                           class="form-text text-muted">网站标题就是会被显示在浏览器tab上的那一小段文字😄</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>导航Navs</label>
-                                    <br>
-                                    <div id="setting_navs">
-                                    </div>
-                                    <small class="form-text text-muted">导航就是所有页面右上角，每个页面都会有的快速导航。</small>
-                                    <button style="margin-top: 10px" class="btn btn-primary" onclick="addNav()">添加一条导航
-                                    </button>
-                                </div>
+                                <input id="input-id" type="file" class="file" data-preview-file-type="text">
                             </div>
                         </div>
 
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">封面设置</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label>个人描述</label>
-                                    <input class="form-control" id="input_des" placeholder="布尔什维克 & 第四国际精神领袖">
-                                    <small class="form-text text-muted">个人描述就是在Logo下面一段简单的介绍</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>链接Links</label>
-                                    <br>
-                                    <div id="setting_links"></div>
-                                    <small class="form-text text-muted">链接就是，在首页Logo下面的下面那几个可以跳转的按钮🔘</small>
-                                    <button style="margin-top: 10px" onclick="addLink()" class="btn btn-primary">
-                                        添加一条链接
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
                         <button style="float:right; " class="btn btn-success" onclick="saveSetting()">保存设置&更新首页</button>
 
@@ -284,114 +249,15 @@
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
+<script src="../js/popper.min.js"></script>
+<script src="../js/fileinput.min.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/locales_zh.js"></script>
+
 
 <script>
+    $("#input-id").fileinput();
 
-    var navs = [];
-    var links = [];
-    $.ajax({
-        url: "/admin/setting",
-        type: "GET",
-        contentType: "application/json",
-        dataType: "json",
-        success: function (data) {
-            if (data.code === 200) {
-                $("#input_title").attr("value", data.result.title);
-                $("#input_des").attr("value", data.result.description);
-                navs = data.result.navs;
-                buildNavs();
-                links = data.result.links;
-                buildLinks();
-            }
-        }
-    })
-
-    function addNavs(key, value, index) {
-        const id_key = "navs_key_" + index;
-        const id_value = "navs_value_" + index;
-        const str = ' <input style="width: 40%; display: inline" oninput="inputText(\'' + id_key + '\')" class="form-control" id="' + id_key + '" placeholder="展示文字" value="' + key + '"> - <input style="width: 40% ;  display: inline"  oninput="inputText(\'' + id_value + '\')" class="form-control" id="' + id_value + '" placeholder="实际连接🔗" value="' + value + '"><button style="margin-left: 10px" onclick="delNavs(' + index + ')" class="btn btn-danger">删除该条导航</button>'
-        $("#setting_navs").html($("#setting_navs").html() + str)
-    }
-
-    function addLinks(key, value, index) {
-        const id_key = "links_key_" + index;
-        const id_value = "links_value_" + index;
-        const str = ' <input style="width: 40%; display: inline" oninput="inputText(\'' + id_key + '\')" class="form-control" id="' + id_key + '" placeholder="展示文字" value="' + key + '"> - <input style="width: 40% ;  display: inline"  oninput="inputText(\'' + id_value + '\')" class="form-control" id="' + id_value + '" placeholder="实际连接🔗" value="' + value + '"><button style="margin-left: 10px" onclick="delLinks(' + index + ')" class="btn btn-danger">删除该条链接</button>'
-        $("#setting_links").html($("#setting_links").html() + str)
-    }
-
-    function inputText(id) {
-        var strs = id.split("_");
-        $("#" + id).attr("value", $("#" + id).val())
-        if (strs[0] === "links") {
-            links[parseInt(strs[2])][strs[1]] = $("#" + id).val();
-        } else if (strs[0] === "navs") {
-            navs[parseInt(strs[2])][strs[1]] = $("#" + id).val();
-        }
-
-    }
-
-    function delNavs(index) {
-        navs = navs.filter((obj, i) => {
-            return i !== index
-        })
-        $("#setting_navs").html("");
-        buildNavs();
-    }
-
-    function delLinks(index) {
-        links = links.filter((obj, i) => {
-            return i !== index
-        })
-        $("#setting_links").html("");
-        buildLinks();
-    }
-
-    function buildNavs() {
-        var count = 0;
-        navs.forEach(obj => {
-            addNavs(obj.key, obj.value, count++);
-        })
-    }
-
-    function buildLinks() {
-        var count = 0;
-        links.forEach(obj => {
-            addLinks(obj.key, obj.value, count++);
-        })
-    }
-
-    function addNav() {
-        addNavs("", "", navs.length)
-        navs.push({"key": "", "value": ""});
-    }
-
-    function addLink() {
-        addLinks("", "", links.length)
-        links.push({"key": "", "value": ""});
-    }
-
-    function saveSetting() {
-        var data = {};
-        data["title"] = $("#input_title").val();
-        data["description"] = $("#input_des").val();
-        data["links"] = links;
-        data["navs"] = navs;
-        console.log(JSON.stringify(data))
-        $.ajax({
-            url: "/admin/setting",
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            dataType: "json",
-            success: function (data) {
-                if (data.code === 200) {
-                    console.log("ok")
-                    console.log(data)
-                }
-            }
-        })
-    }
 </script>
 
 </body>
