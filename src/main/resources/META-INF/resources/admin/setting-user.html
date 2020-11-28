@@ -10,7 +10,8 @@
     <link href="../css/all.min.css" rel="stylesheet" type="text/css">
     <link href="../css/nunito.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/fileinput.min.css" rel="stylesheet">
+    <link href="../css/fileinput.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -140,7 +141,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">阳哥在奔跑</span>
-                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                            <img class="img-profile rounded-circle" src="/img/avatar.jpg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -189,14 +190,45 @@
                                 <h6 class="m-0 font-weight-bold text-primary">头像设置</h6>
                             </div>
                             <div class="card-body">
-                                <input id="input-id" type="file" class="file" data-preview-file-type="text">
+                                <form enctype="multipart/form-data">
+                                    <input id="file-file" class="file" type="file" multiple>
+                                </form>
                             </div>
                         </div>
-
-
-                        <button style="float:right; " class="btn btn-success" onclick="saveSetting()">保存设置&更新首页</button>
-
                     </div>
+
+                    <div class="col-lg-12 mb-4">
+
+                        <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">登入信息设置</h6>
+                            </div>
+                            <div class="card-body">
+                                <label>邮箱</label>
+                                <input class="form-control" id="input_email" disabled
+                                       aria-describedby="titleHelp" placeholder="email">
+
+                                <label>昵称</label>
+                                <input class="form-control" id="input_nickname"
+                                       aria-describedby="titleHelp" placeholder="Trotsky">
+
+                                <label>新密码🔒</label>
+                                <input class="form-control" id="input_password" type="password"
+                                       aria-describedby="titleHelp" placeholder="password">
+
+                                <label>重复密码🔒</label>
+                                <input class="form-control" id="input_password_re" type="password"
+                                       aria-describedby="titleHelp" placeholder="password">
+                                <small class="form-text text-muted">若不修改密码则留空😄</small>
+                                <button style="float:right; margin-top: 10px; " class="btn btn-success"
+                                        onclick="saveSetting()">
+                                    保存设置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -249,15 +281,79 @@
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/popper.min.js"></script>
-<script src="../js/fileinput.min.js"></script>
-<script src="../js/theme.js"></script>
-<script src="../js/locales_zh.js"></script>
+<script src="../js/fileinput.js"></script>
+<script src="../js/zh.js"></script>
 
 
 <script>
-    $("#input-id").fileinput();
+    function initFileInput(ctrlName, uploadUrl) {
+        var control = $('#' + ctrlName);
+        control.fileinput({
+            resizeImage: true,
+            resizePreference: 'width',
+            language: 'zh', //设置语言
+            uploadUrl: uploadUrl,//上传地址
+            uploadAsync: true,
+            allowedFileExtensions: ['jpg', 'png', 'gif'], //接收的文件后缀
+            showUpload: true, //是否显示上传按钮
+            showCaption: true, //是否显示标题
+            browseClass: "btn btn-primary", //按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            maxFileCount: 10,//上传的最多文件数为10
+            msgFilesTooMany: "选择图片超过了最大数量"
+        });
+    };
 
+    //初始化控件initFileInput(id,uploadurl)控件id，与上传路径
+
+    initFileInput("file-file", "/admin/images/upload");
+
+    $("#file-file").on("fileuploaded",
+        function (event, data) {
+            if (data.response) {
+                // 根据上传的返回值，按需处理
+            }
+        });
+
+    $.ajax({
+            url: "/admin/info",
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data.result)
+                if (data.code === 200) {
+                    $("#input_email").attr("value", data.result.email);
+                    $("#input_nickname").attr("value", data.result.nickName);
+                }
+            }
+        }
+    )
+
+    function saveSetting() {
+        var psw = $("#input_password").val();
+        var psw2 = $("#input_password_re").val();
+        if (psw === psw2) {
+            var data = {};
+            data.password = psw;
+            data.nickName = $("#input_nickname").val();
+            $.ajax({
+                    url: "/admin/info",
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data.result)
+                        if (data.code === 200) {
+
+                        }
+                    }
+                }
+            )
+
+        }
+    }
 </script>
 
 </body>
