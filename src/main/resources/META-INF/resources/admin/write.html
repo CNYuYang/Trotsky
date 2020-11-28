@@ -10,17 +10,7 @@
     <link href="../css/all.min.css" rel="stylesheet" type="text/css">
     <link href="../css/nunito.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/codemirror.css" rel="stylesheet">
-    <link href="../css/toastui-editor.css" rel="stylesheet">
-    <link href="../css/index.css" rel="stylesheet">
-
-    <style>
-        .el-alert {
-            margin-bottom: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-    </style>
+    <link href="../css/editormd.css" rel="stylesheet">
 
 </head>
 
@@ -44,7 +34,7 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" href="home.html">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
@@ -59,7 +49,7 @@
         </div>
 
         <!-- Nav Item - Charts -->
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="write.html">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>笔记创作</span></a>
@@ -75,14 +65,14 @@
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">
-            <a class="nav-link" href="charts.html">
+            <a class="nav-link" href="manage-note.html">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>笔记管理</span></a>
         </li>
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-            <a class="nav-link" href="tables.html">
+            <a class="nav-link" href="manage-catagory.html">
                 <i class="fas fa-fw fa-table"></i>
                 <span>收纳管理</span></a>
         </li>
@@ -103,11 +93,17 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="utilities-color.html">首页设置</a>
-                    <a class="collapse-item" href="utilities-border.html">小工具</a>
+                    <a class="collapse-item" href="setting-index.html">首页设置</a>
+                    <a class="collapse-item" href="tool.html">小工具</a>
                     <a class="collapse-item" href="about.html">关于</a>
                 </div>
             </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="setting-user.html">
+                <i class="fas fa-fw fa-table"></i>
+                <span>用户设置</span></a>
         </li>
 
         <!-- Divider -->
@@ -185,18 +181,11 @@
                     教程》</a>.</p>
 
             </div>
-
-            <div id="app">
-                <el-alert
-                        title="Trotsky暂时不支持上传图片，请使用图床"
-                        type="warning">
-                </el-alert>
-
-                <div id="editor"></div>
+            <div id="test-editormd">
+                <textarea id="md" style="display:none;"></textarea>
             </div>
+            <button style="float:right; margin-bottom: 10px" class="btn btn-success" onclick="save()">保存文章</button>
 
-
-            <!-- /.container-fluid -->
 
         </div>
         <!-- End of Main Content -->
@@ -242,76 +231,32 @@
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="../js/babel.min.js"></script>
 <script src="../js/jquery-3.3.1.min.js"></script>
-
-<script src="../js/toastui-jquery-editor.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/vue.js"></script>
-<script src="../js/index.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="../js/jquery.easing.min.js"></script>
+<script src="../js/editormd.min.js"></script>
 
 <script type="application/javascript">
-    const content = [
-        '![image](https://uicdn.toast.com/toastui/img/tui-editor-bi.png)',
-        '',
-        '# Heading 1',
-        '## Heading 2',
-        '### Heading 3',
-        '#### Heading 4',
-        '##### Heading 5',
-        '###### Heading 6',
-        '',
-        '**bold** *italic* ~~strikethrough~~',
-        '<span style="color:#e11d21;">Color Syntax</span>',
-        '[link](https://nhn.github.io/tui.editor/)',
-        '',
-        '---',
-        'horizontal line',
-        '***',
-        '',
-        '> block quote',
-        '>> block quote (2 depth)',
-        '>>> block quote (3 depth)',
-        '',
-        '* list',
-        '    * list indented',
-        '1. ordered',
-        '2. list',
-        '    1. ordered list',
-        '    2. indented',
-        '',
-        '- [ ] task',
-        '- [x] list completed',
-        '',
-        '`inline code`',
-        '',
-        '    code block',
-        '```js',
-        'console.log("fenced code block");',
-        '```',
-        '<pre>**HTML block**</pre>',
-        '',
-        '| table | head |',
-        '| ----  | ---- |',
-        '| table | body |'
-    ].join('\n');
 
-    $('#editor').toastuiEditor({
-        previewStyle: 'vertical',
-        height: '500px',
-        initialValue: content
+    var testEditor;
+
+    $(function () {
+        // You can custom @link base url.
+        editormd.urls.atLinkBase = "https://github.com/";
+
+        testEditor = editormd("test-editormd", {
+            width: "100%",
+            height: 720,
+            toc: true,
+            //atLink    : false,    // disable @link
+            //emailLink : false,    // disable email address auto link
+            todoList: true,
+            path: '../lib/'
+        });
     });
 
-    new Vue({
-        el: '#app',
-        data: function () {
-            return {visible: false}
-        }
-    })
-
+    function save() {
+        console.log($("#md").val())
+    }
 </script>
 
 

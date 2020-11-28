@@ -77,6 +77,7 @@ $(function () {
             contentType: "application/json",
             dataType: "json",
             success: function (data) {
+
                 window.location.href = "/admin/home.html";
             },
             error: function () {
