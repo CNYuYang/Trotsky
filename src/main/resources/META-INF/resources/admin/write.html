@@ -34,7 +34,7 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="home.html">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Nav Item - Charts -->
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" href="write.html">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>笔记创作</span></a>
@@ -106,14 +106,6 @@
                 <span>用户设置</span></a>
         </li>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -141,7 +133,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">阳哥在奔跑</span>
-                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                            <img class="img-profile rounded-circle" src="/img/avatar.jpg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -181,10 +173,15 @@
                     教程》</a>.</p>
 
             </div>
-            <div id="test-editormd">
+            <div id="editormd">
                 <textarea id="md" style="display:none;"></textarea>
             </div>
-            <button style="float:right; margin-bottom: 10px" class="btn btn-success" onclick="save()">保存文章</button>
+
+            <div style="float: right; margin-bottom: 10px;">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importMd">导入笔记</button>
+
+                <button class="btn btn-success" onclick="save()">保存文章</button>
+            </div>
 
 
         </div>
@@ -230,20 +227,47 @@
     </div>
 </div>
 
+
+<!-- Logout Modal-->
+<div class="modal fade" id="importMd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑已有笔记</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert">
+                    这个地方应该放个tree的，还没来的急，理解万岁！
+                </div>
+                <div id="tree"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <button class="btn btn-primary" type="button" data-dismiss="modal" onclick="getText()">导入</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/editormd.min.js"></script>
+<script src="../js/bootstrap-treeview.min.js"></script>
 
 <script type="application/javascript">
 
-    var testEditor;
+    var editor;
 
     $(function () {
         // You can custom @link base url.
         editormd.urls.atLinkBase = "https://github.com/";
 
-        testEditor = editormd("test-editormd", {
+        editor = editormd("editormd", {
             width: "100%",
             height: 720,
             toc: true,
@@ -256,6 +280,50 @@
 
     function save() {
         console.log($("#md").val())
+    }
+
+    var tree = [];
+
+    $.ajax({
+        url: "/admin/md/info/all",
+        type: "GET",
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            //
+            data = data.result;
+            console.log(data)
+            data.forEach(obj => {
+                tree.push({
+                    text: obj.name
+                })
+            })
+            $('#tree').treeview({data: tree});
+
+            $('#tree').on('nodeSelected', function (event, data) {
+                selectNode = data.text;
+            });
+
+            $('#tree').on('nodeUnselected', function (event, data) {
+                selectNode = "";
+            });
+
+        }
+    })
+
+    var selectNode = "";
+
+    function getText() {
+        if (selectNode !== "") {
+            $.ajax({
+                url: "/admin/md/" + selectNode + "/sync",
+                type: "GET",
+                contentType: "application/json",
+                success: function (data) {
+                    editor.setMarkdown(data.result);
+                }
+            })
+        }
     }
 </script>
 

@@ -1,9 +1,12 @@
 package run.yuyang.trotsky.resource;
 
+import com.sun.source.tree.Tree;
 import io.smallrye.mutiny.Uni;
 import run.yuyang.trotsky.commom.utils.ResUtils;
+import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.request.MDParam;
+import run.yuyang.trotsky.model.response.TreeInfo;
 import run.yuyang.trotsky.service.AsyncFileService;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.FileService;
@@ -12,6 +15,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author YuYang
@@ -56,9 +61,9 @@ public class MarkDownResource {
 
     @GET
     @Path("/{name}/sync")
-    public String getTextSync(@PathParam("name") String name) {
+    public Response getTextSync(@PathParam("name") String name) {
         if (confService.existNoteConf(name) && fileService.existFile(confService.getNotePath(name))) {
-            return fileService.getFileSync(confService.getNotePath(name));
+            return ResUtils.success(fileService.getFileSync(confService.getNotePath(name)));
         }
         return null;
     }
@@ -85,5 +90,32 @@ public class MarkDownResource {
         }
     }
 
+    @GET
+    @Path("/dir/type/{type}")
+    public Response getDirByType(@PathParam("type") Integer type) {
+        List<TreeInfo> list = new LinkedList<>();
+        confService.getNoteDirs().forEach((k, v) -> {
+            if (v.getType().equals(type)) {
+                list.add(TreeInfo.builder()
+                        .name(v.getName())
+                        .path(v.getPath())
+                        .build());
+            }
+        });
+        return ResUtils.success(list);
+    }
+
+    @GET
+    @Path("/info/all")
+    public Response getAllMdInfo() {
+        List<TreeInfo> list = new LinkedList<>();
+        confService.getNoteConfs().forEach((k, v) -> {
+            list.add(TreeInfo.builder()
+                    .name(v.getName())
+                    .path(v.getPath())
+                    .build());
+        });
+        return ResUtils.success(list);
+    }
 
 }
