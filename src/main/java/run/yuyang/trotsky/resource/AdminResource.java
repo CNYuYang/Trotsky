@@ -6,7 +6,6 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.IndexConf;
-import run.yuyang.trotsky.model.conf.UserConf;
 import run.yuyang.trotsky.model.request.InfoParam;
 import run.yuyang.trotsky.model.request.LoginParam;
 import run.yuyang.trotsky.model.response.UserInfo;

@@ -264,15 +264,11 @@
     var editor;
 
     $(function () {
-        // You can custom @link base url.
         editormd.urls.atLinkBase = "https://github.com/";
-
         editor = editormd("editormd", {
             width: "100%",
             height: 720,
             toc: true,
-            //atLink    : false,    // disable @link
-            //emailLink : false,    // disable email address auto link
             todoList: true,
             path: '../lib/'
         });
@@ -290,9 +286,7 @@
         contentType: "application/json",
         dataType: "json",
         success: function (data) {
-            //
             data = data.result;
-            console.log(data)
             data.forEach(obj => {
                 tree.push({
                     text: obj.name

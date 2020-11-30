@@ -1,13 +1,9 @@
 package run.yuyang.trotsky.resource;
 
-import com.sun.source.tree.Tree;
-import io.smallrye.mutiny.Uni;
 import run.yuyang.trotsky.commom.utils.ResUtils;
-import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.request.MDParam;
 import run.yuyang.trotsky.model.response.TreeInfo;
-import run.yuyang.trotsky.service.AsyncFileService;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.FileService;
 
@@ -32,9 +28,6 @@ public class MarkDownResource {
     @Inject
     FileService fileService;
 
-    @Inject
-    AsyncFileService asyncFileService;
-
     @GET
     public Response getAllInfo() {
         return ResUtils.success(confService.getNoteConfs());
@@ -51,16 +44,7 @@ public class MarkDownResource {
     }
 
     @GET
-    @Path("/{name}/async")
-    public Uni<String> getTextAsync(@PathParam("name") String name) {
-        if (confService.existNoteConf(name) && fileService.existFile(confService.getNotePath(name))) {
-            return asyncFileService.getFileAsync(confService.getNotePath(name));
-        }
-        return null;
-    }
-
-    @GET
-    @Path("/{name}/sync")
+    @Path("/{name}")
     public Response getTextSync(@PathParam("name") String name) {
         if (confService.existNoteConf(name) && fileService.existFile(confService.getNotePath(name))) {
             return ResUtils.success(fileService.getFileSync(confService.getNotePath(name)));

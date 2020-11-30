@@ -1,7 +1,6 @@
 package run.yuyang.trotsky.resource;
 
-import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.core.Vertx;
+import io.vertx.core.Vertx;
 import run.yuyang.trotsky.service.ConfService;
 
 import javax.inject.Inject;
@@ -27,25 +26,25 @@ public class IndexResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Uni<String> home() {
-        return vertx.fileSystem().readFile(confService.getWorkerPath() + "/index.html")
-                .onItem().transform(b -> b.toString("UTF-8"));
+    public Response home() {
+        File file = new File(confService.getWorkerPath() + "/index.html");
+        return Response.ok(file).build();
     }
 
     @GET
     @Path("/css/{css}")
     @Produces("text/css")
-    public Uni<String> getCss(@PathParam("css") String css) {
-        return vertx.fileSystem().readFile(confService.getWorkerPath() + "/css/" + css)
-                .onItem().transform(b -> b.toString("UTF-8"));
+    public Response getCss(@PathParam("css") String css) {
+        File file = new File(confService.getWorkerPath() + "/css/" + css);
+        return Response.ok(file).build();
     }
 
     @GET
     @Path("/js/{js}")
     @Produces("application/javascript")
-    public Uni<String> getJs(@PathParam("js") String js) {
-        return vertx.fileSystem().readFile(confService.getWorkerPath() + "/js/" + js)
-                .onItem().transform(b -> b.toString("UTF-8"));
+    public Response getJs(@PathParam("js") String js) {
+        File file = new File(confService.getWorkerPath() + "/js/" + js);
+        return Response.ok(file).build();
     }
 
     @GET
@@ -67,9 +66,9 @@ public class IndexResource {
     @GET
     @Path("/{md:.*md$}")
     @Produces("text/markdown")
-    public Uni<String> getMd(@PathParam("md") String md) {
-        return vertx.fileSystem().readFile(confService.getWorkerPath() + "/" + md)
-                .onItem().transform(b -> b.toString("UTF-8"));
+    public Response getMd(@PathParam("md") String md) {
+        File file = new File(confService.getWorkerPath() + "/" + md);
+        return Response.ok(file).build();
     }
 
 }
