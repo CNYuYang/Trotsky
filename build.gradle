@@ -15,6 +15,7 @@ dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-resteasy'
     implementation 'io.quarkus:quarkus-resteasy-jackson'
+    implementation 'io.quarkus:quarkus-resteasy-mutiny'
     implementation 'org.jboss.resteasy:resteasy-multipart-provider'
     implementation 'io.quarkus:quarkus-vertx'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'

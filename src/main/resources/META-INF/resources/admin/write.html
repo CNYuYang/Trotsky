@@ -310,7 +310,7 @@
     function getText() {
         if (selectNode !== "") {
             $.ajax({
-                url: "/admin/md/" + selectNode + "/sync",
+                url: "/admin/md/" + selectNode,
                 type: "GET",
                 contentType: "application/json",
                 success: function (data) {

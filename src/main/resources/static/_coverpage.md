@@ -2,5 +2,5 @@
 
 **布尔什维克 & 第四国际精神领袖**
 
-[GitHub](https://github.com/CNYuYang/Tortsky)  [About Me](#about-me) [Notes](notes.md)
+[GitHub](https://github.com/CNYuYang/Trotsky)  [About Me](#about-me) [Notes](notes.md)
 

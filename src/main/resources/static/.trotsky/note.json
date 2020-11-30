@@ -9,6 +9,15 @@
     "show": true
   },
   {
+    "name": "README.md",
+    "father": "",
+    "path": "/README.md",
+    "id": 0,
+    "depth": 0,
+    "type": 0,
+    "show": true
+  },
+  {
     "name": "被背叛的革命.md",
     "father": "notes",
     "path": "/notes/被背叛的革命.md",
