@@ -1,4 +1,4 @@
-package run.yuyang.trotsky.model.request;
+package run.yuyang.trotsky.model.param;
 
 import lombok.Getter;
 import lombok.Setter;

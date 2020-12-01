@@ -1,6 +1,5 @@
 package run.yuyang.trotsky.resource;
 
-import io.vertx.core.Vertx;
 import run.yuyang.trotsky.service.ConfService;
 
 import javax.inject.Inject;
@@ -20,9 +19,6 @@ public class IndexResource {
 
     @Inject
     ConfService confService;
-
-    @Inject
-    Vertx vertx;
 
     @GET
     @Produces(MediaType.TEXT_HTML)

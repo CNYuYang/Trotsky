@@ -1,16 +1,19 @@
-package run.yuyang.trotsky.model.response;
+package run.yuyang.trotsky.model.vo;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * @author YuYang
+ */
 @Data
 @RegisterForReflection
 @Builder
-public class UserInfo {
+public class TreeVO {
 
-    private String email;
+    private String name;
 
-    private String nickName;
+    private String path;
 
 }

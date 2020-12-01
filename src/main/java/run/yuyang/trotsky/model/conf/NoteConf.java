@@ -2,7 +2,7 @@ package run.yuyang.trotsky.model.conf;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
-import run.yuyang.trotsky.model.request.MDParam;
+import run.yuyang.trotsky.model.param.MDParam;
 
 /**
  * @author YuYang

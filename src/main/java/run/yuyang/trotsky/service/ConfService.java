@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import run.yuyang.trotsky.model.conf.*;
-import run.yuyang.trotsky.model.request.MDParam;
+import run.yuyang.trotsky.model.param.MDParam;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

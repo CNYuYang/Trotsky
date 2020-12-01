@@ -6,9 +6,9 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.IndexConf;
-import run.yuyang.trotsky.model.request.InfoParam;
-import run.yuyang.trotsky.model.request.LoginParam;
-import run.yuyang.trotsky.model.response.UserInfo;
+import run.yuyang.trotsky.model.param.InfoParam;
+import run.yuyang.trotsky.model.param.LoginParam;
+import run.yuyang.trotsky.model.vo.UserVO;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.PageService;
 
@@ -83,7 +83,7 @@ public class AdminResource {
         if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
             return ResUtils.failure("No Authenticate");
         } else {
-            UserInfo info = UserInfo.builder()
+            UserVO info = UserVO.builder()
                     .nickName(confService.getUserConf().getNickName())
                     .email(confService.getUserConf().getEmail())
                     .build();

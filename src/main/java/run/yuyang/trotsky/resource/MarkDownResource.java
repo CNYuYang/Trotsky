@@ -2,8 +2,8 @@ package run.yuyang.trotsky.resource;
 
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.NoteConf;
-import run.yuyang.trotsky.model.request.MDParam;
-import run.yuyang.trotsky.model.response.TreeInfo;
+import run.yuyang.trotsky.model.param.MDParam;
+import run.yuyang.trotsky.model.vo.TreeVO;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.FileService;
 
@@ -34,7 +34,7 @@ public class MarkDownResource {
     }
 
     @GET
-    @Path("/{name}/info")
+    @Path("/info/{name}")
     public Response getInfoByName(@PathParam("name") String name) {
         if (confService.existNoteConf(name)) {
             return ResUtils.success(confService.getNoteConf(name));
@@ -44,8 +44,21 @@ public class MarkDownResource {
     }
 
     @GET
+    @Path("/info/all")
+    public Response getAllMdInfo() {
+        List<TreeVO> list = new LinkedList<>();
+        confService.getNoteConfs().forEach((k, v) -> {
+            list.add(TreeVO.builder()
+                    .name(v.getName())
+                    .path(v.getPath())
+                    .build());
+        });
+        return ResUtils.success(list);
+    }
+
+    @GET
     @Path("/{name}")
-    public Response getTextSync(@PathParam("name") String name) {
+    public Response getText(@PathParam("name") String name) {
         if (confService.existNoteConf(name) && fileService.existFile(confService.getNotePath(name))) {
             return ResUtils.success(fileService.getFileSync(confService.getNotePath(name)));
         }
@@ -74,32 +87,5 @@ public class MarkDownResource {
         }
     }
 
-    @GET
-    @Path("/dir/type/{type}")
-    public Response getDirByType(@PathParam("type") Integer type) {
-        List<TreeInfo> list = new LinkedList<>();
-        confService.getNoteDirs().forEach((k, v) -> {
-            if (v.getType().equals(type)) {
-                list.add(TreeInfo.builder()
-                        .name(v.getName())
-                        .path(v.getPath())
-                        .build());
-            }
-        });
-        return ResUtils.success(list);
-    }
-
-    @GET
-    @Path("/info/all")
-    public Response getAllMdInfo() {
-        List<TreeInfo> list = new LinkedList<>();
-        confService.getNoteConfs().forEach((k, v) -> {
-            list.add(TreeInfo.builder()
-                    .name(v.getName())
-                    .path(v.getPath())
-                    .build());
-        });
-        return ResUtils.success(list);
-    }
 
 }
