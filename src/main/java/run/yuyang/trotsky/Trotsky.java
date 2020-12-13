@@ -50,7 +50,7 @@ public class Trotsky implements QuarkusApplication {
             return help();
         }
         String cmd = args[0];
-        switch (cmd) {
+        switch (cmd) {  
             case "-v":
             case "--version":
                 return version();

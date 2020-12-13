@@ -181,6 +181,21 @@
 
                 <!-- Content Row -->
                 <div class="row">
+
+                    <div class="col-lg-12 mb-4">
+
+                        <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">现有分类</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="tree"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -233,79 +248,38 @@
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/fileinput.js"></script>
-<script src="../js/zh.js"></script>
-
+<script src="../js/bootstrap-treeview.min.js"></script>
 
 <script>
-    function initFileInput(ctrlName, uploadUrl) {
-        var control = $('#' + ctrlName);
-        control.fileinput({
-            resizeImage: true,
-            resizePreference: 'width',
-            language: 'zh', //设置语言
-            uploadUrl: uploadUrl,//上传地址
-            uploadAsync: true,
-            allowedFileExtensions: ['jpg', 'png', 'gif'], //接收的文件后缀
-            showUpload: true, //是否显示上传按钮
-            showCaption: true, //是否显示标题
-            browseClass: "btn btn-primary", //按钮样式
-            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
-            maxFileCount: 10,//上传的最多文件数为10
-            msgFilesTooMany: "选择图片超过了最大数量"
-        });
-    };
-
-    //初始化控件initFileInput(id,uploadurl)控件id，与上传路径
-
-    initFileInput("file-file", "/admin/images/upload");
-
-    $("#file-file").on("fileuploaded",
-        function (event, data) {
-            if (data.response) {
-                // 根据上传的返回值，按需处理
-            }
-        });
+    var tree = [];
 
     $.ajax({
-            url: "/admin/info",
-            type: "GET",
-            contentType: "application/json",
-            dataType: "json",
-            success: function (data) {
-                console.log(data.result)
-                if (data.code === 200) {
-                    $("#input_email").attr("value", data.result.email);
-                    $("#input_nickname").attr("value", data.result.nickName);
-                }
-            }
-        }
-    )
+        url: "/admin/dir/type/0",
+        type: "GET",
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            data = data.result;
+            data.forEach(obj => {
+                tree.push({
+                    text: obj.name
+                })
+            })
+            $('#tree').treeview({data: tree});
 
-    function saveSetting() {
-        var psw = $("#input_password").val();
-        var psw2 = $("#input_password_re").val();
-        if (psw === psw2) {
-            var data = {};
-            data.password = psw;
-            data.nickName = $("#input_nickname").val();
-            $.ajax({
-                    url: "/admin/info",
-                    type: "PUT",
-                    contentType: "application/json",
-                    data: JSON.stringify(data),
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data.result)
-                        if (data.code === 200) {
+            $('#tree').on('nodeSelected', function (event, data) {
+                selectNode = data.text;
+            });
 
-                        }
-                    }
-                }
-            )
+            $('#tree').on('nodeUnselected', function (event, data) {
+                selectNode = "";
+            });
 
         }
-    }
+    })
+
+    var selectNode = "";
+
 </script>
 
 </body>

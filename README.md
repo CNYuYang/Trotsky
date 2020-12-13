@@ -39,7 +39,7 @@ Trotsky会帮你生成如下图的首页，你可以对logo、简介、连接等
 ## 编译
 
 ```shell script
-./gradlew build -Dquarkus.package.type=native -Dquarkus.native.additional-build-args=-H:ResourceConfigurationFiles=resources-config.json
+gradle build -Dquarkus.package.type=native -Dquarkus.native.additional-build-args=-H:ResourceConfigurationFiles=resources-config.json
 ```
 
 编译结束之后，会在`build`目录下生成一个`trotsky-beta-runner`的可执行文件。
