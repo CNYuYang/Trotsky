@@ -181,11 +181,14 @@
                         <nav aria-label="breadcrumb">
 
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item active" aria-current="page">Notes</li>
+                                <li class="breadcrumb-item active" aria-current="page">notes</li>
                             </ol>
                         </nav>
 
                         <table id="dataTable" class="display" width="100%"></table>
+
+                        <button type="button" class="btn btn-primary"><a data-toggle="modal" data-target="#newModal">新建子分类</a>
+                        </button>
 
                     </div>
 
@@ -218,6 +221,28 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+<!-- new Modal-->
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="newModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newModalLabel">新建子分类?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">在该目录下创建一个子分类：
+                <input class="form-control" id="input_new_name">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="newChild()">创建</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- del Modal-->
 <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel"
      aria-hidden="true">
@@ -234,7 +259,6 @@
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
                 <a class="btn btn-danger" onclick="delCate">删除</a>
             </div>
-
         </div>
     </div>
 </div>
@@ -266,6 +290,9 @@
 
 <script>
 
+    let op_name = "notes";
+    let op_path = "/notes";
+
     function getChild(parent, func) {
         let child_data = [];
 
@@ -278,6 +305,22 @@
                 if (data.code === 200) {
                     child_data = data.result;
                     func(child_data);
+                }
+            }
+        })
+    }
+
+    function newChild() {
+        const text = $("#input_new_name").val();
+        $.ajax({
+            url: "/admin/dir/parent/" + op_name + "/child/" + text,
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                if (data.code === 200) {
+                    console.log("ok")
+                    manageName(op_path);
                 }
             }
         })
@@ -317,8 +360,9 @@
         console.log("管理子分类 -> " + path)
         let navs = path.split("/");
         buildNavs(path);
-        console.log(navs[navs.length - 1])
-        getChild(navs[navs.length - 1], function (child_data) {
+        op_name = navs[navs.length - 1];
+        op_path = path;
+        getChild(op_name, function (child_data) {
             var table = $('#dataTable').DataTable();
             table.clear().draw();
             if (child_data.length > 0) {

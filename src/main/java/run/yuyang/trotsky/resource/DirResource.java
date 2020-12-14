@@ -60,4 +60,11 @@ public class DirResource {
         return ResUtils.success(list);
     }
 
+    @POST
+    @Path("/parent/{parent}/child/{child}")
+    public Response newDir(@PathParam("parent") String parent, @PathParam("child") String child) {
+        confService.newDir(parent, child);
+        return ResUtils.success();
+    }
+
 }

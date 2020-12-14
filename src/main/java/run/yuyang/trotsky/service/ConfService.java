@@ -115,6 +115,7 @@ public class ConfService {
         countConf.addNote();
     }
 
+
     private void saveNoteConf() {
         JsonArray array = new JsonArray();
         noteConfs.forEach((k, note) -> {
@@ -126,6 +127,15 @@ public class ConfService {
 
     public void saveIndexConf() {
         vertx.fileSystem().writeFileBlocking(workerPath + "/.trotsky/index.json", Buffer.buffer(JsonObject.mapFrom(indexConf).toString() + "\n"));
+    }
+
+    public void saveDirConf() {
+        JsonArray array = new JsonArray();
+        noteDirs.forEach((k, note) -> {
+            array.add(JsonObject.mapFrom(note));
+        });
+        vertx.fileSystem().writeFileBlocking(workerPath + "/.trotsky/dir.json", Buffer.buffer(array.toString() + "\n"));
+        vertx.fileSystem().writeFileBlocking(workerPath + "/.trotsky/count.json", Buffer.buffer(JsonObject.mapFrom(countConf).toString() + "\n"));
     }
 
     public void addNoteConfAndSave(NoteConf noteConf) {
@@ -143,4 +153,19 @@ public class ConfService {
         saveNoteConf();
     }
 
+    public void newDir(String parent, String child) {
+        DirConf dirConf = new DirConf();
+        dirConf.setFather(parent);
+        dirConf.setName(child);
+        dirConf.setDir_nums(0);
+        dirConf.setNote_nums(0);
+        dirConf.setDepth(noteDirs.get(parent).getDepth() + 1);
+        dirConf.setType(1);
+        dirConf.setPath(noteDirs.get(parent).getPath() + "/" + child);
+        dirConf.setId(countConf.getNextDirId());
+        noteDirs.put(child, dirConf);
+        noteDirs.get(parent).setDir_nums(noteDirs.get(parent).getDir_nums() + 1);
+        vertx.fileSystem().mkdirBlocking(workerPath + dirConf.getPath());
+        saveDirConf();
+    }
 }
