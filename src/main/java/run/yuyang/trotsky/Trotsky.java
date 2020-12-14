@@ -5,9 +5,10 @@ import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import run.yuyang.trotsky.commom.exception.TrotskyException;
+import run.yuyang.trotsky.commom.utils.FileUtils;
 import run.yuyang.trotsky.service.ConfService;
-import run.yuyang.trotsky.service.FileService;
 import run.yuyang.trotsky.service.InitService;
+
 
 import javax.inject.Inject;
 
@@ -19,7 +20,7 @@ import javax.inject.Inject;
 public class Trotsky implements QuarkusApplication {
 
 
-    private String banner = "_________ _______  _______ _________ _______  _                \n" +
+    private final String BANNER = "_________ _______  _______ _________ _______  _                \n" +
             "\\__   __/(  ____ )(  ___  )\\__   __/(  ____ \\| \\    /\\|\\     /|\n" +
             "   ) (   | (    )|| (   ) |   ) (   | (    \\/|  \\  / /( \\   / )\n" +
             "   | |   | (____)|| |   | |   | |   | (_____ |  (_/ /  \\ (_) / \n" +
@@ -34,9 +35,6 @@ public class Trotsky implements QuarkusApplication {
 
     @Inject
     ConfService confService;
-
-    @Inject
-    FileService fileService;
 
     @ConfigProperty(name = "trotsky.version", defaultValue = "unknown")
     private String version;
@@ -76,10 +74,10 @@ public class Trotsky implements QuarkusApplication {
                 } else if (args.length > 2) {
                     return help();
                 }
-                confService.readConfFromFile(fileService.getRelPath(path));
-                System.out.println(banner);
-                System.out.println("\n\n    trotsky is listening port : " + port + " \n    the URL is http://127.0.0.1:" + port);
-                System.out.println("\n\n    trotsky`s dashboard is worker on  http://127.0.0.1:" + port + "/admin");
+                confService.setWorkerPath(FileUtils.getRelPath(path));
+                confService.load();
+                System.out.println(BANNER);
+                System.out.println("\n\n    trotsky is listening port : " + port + " \n    the URL is http://127.0.0.1:" + port + "\n    dashboard is  http://127.0.0.1:" + port + "/admin");
                 Quarkus.waitForExit();
                 return 0;
             }

@@ -18,6 +18,8 @@ dependencies {
     implementation 'io.quarkus:quarkus-resteasy-mutiny'
     implementation 'org.jboss.resteasy:resteasy-multipart-provider'
     implementation 'io.quarkus:quarkus-vertx'
+    implementation 'org.jboss.logging:commons-logging-jboss-logging'
+    implementation 'org.jboss.logmanager:log4j2-jboss-logmanager'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     compileOnly 'org.projectlombok:lombok:1.18.2'
 }

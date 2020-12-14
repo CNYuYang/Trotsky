@@ -1,6 +1,6 @@
 package run.yuyang.trotsky.resource;
 
-import run.yuyang.trotsky.service.PageService;
+import run.yuyang.trotsky.service.impl.PageServiceImpl;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class PageResource {
 
     @Inject
-    PageService pageService;
+    PageServiceImpl pageService;
 
     @GET
     @Path("/notes")

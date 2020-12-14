@@ -10,7 +10,7 @@ import run.yuyang.trotsky.model.param.InfoParam;
 import run.yuyang.trotsky.model.param.LoginParam;
 import run.yuyang.trotsky.model.vo.UserVO;
 import run.yuyang.trotsky.service.ConfService;
-import run.yuyang.trotsky.service.PageService;
+import run.yuyang.trotsky.service.impl.PageServiceImpl;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -36,7 +36,7 @@ public class AdminResource {
     ConfService confService;
 
     @Inject
-    PageService pageService;
+    PageServiceImpl pageService;
 
     @GET()
     @Produces(MediaType.TEXT_HTML)

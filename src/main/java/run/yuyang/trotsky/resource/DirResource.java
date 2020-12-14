@@ -1,8 +1,10 @@
 package run.yuyang.trotsky.resource;
 
 import run.yuyang.trotsky.commom.utils.ResUtils;
+import run.yuyang.trotsky.model.param.ChangeDirNameParam;
+import run.yuyang.trotsky.model.param.NewDirParam;
 import run.yuyang.trotsky.model.vo.TreeVO;
-import run.yuyang.trotsky.service.ConfService;
+import run.yuyang.trotsky.service.ConfServiceOld;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -20,7 +22,7 @@ import java.util.List;
 public class DirResource {
 
     @Inject
-    ConfService confService;
+    ConfServiceOld confService;
 
     @GET
     public Response getAll() {
@@ -61,9 +63,38 @@ public class DirResource {
     }
 
     @POST
-    @Path("/parent/{parent}/child/{child}")
-    public Response newDir(@PathParam("parent") String parent, @PathParam("child") String child) {
-        confService.newDir(parent, child);
+    public Response newDir(NewDirParam newDirParam) {
+        confService.newDir(newDirParam.getParent(), newDirParam.getChild());
+        return ResUtils.success();
+    }
+
+    @PUT
+    @Path("/change/name")
+    public Response changeName(ChangeDirNameParam changeDirNameParam) {
+
+
+        return ResUtils.success();
+    }
+
+
+    @DELETE
+    @Path("/name/{name}")
+    public Response delByName(@PathParam("name") String name) {
+
+        return ResUtils.success();
+    }
+
+    @DELETE
+    @Path("/intro/{name}")
+    public Response delDirIntro(@PathParam("name") String name) {
+
+        return ResUtils.success();
+    }
+
+    @POST
+    @Path("/intro/{name}")
+    public Response newDirIntro(@PathParam("name") String name) {
+
         return ResUtils.success();
     }
 

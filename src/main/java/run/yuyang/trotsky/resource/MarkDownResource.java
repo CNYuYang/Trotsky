@@ -4,8 +4,8 @@ import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.param.MDParam;
 import run.yuyang.trotsky.model.vo.TreeVO;
-import run.yuyang.trotsky.service.ConfService;
-import run.yuyang.trotsky.service.FileService;
+import run.yuyang.trotsky.service.ConfServiceOld;
+import run.yuyang.trotsky.service.impl.FileServiceImpl;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,10 +23,10 @@ import java.util.List;
 public class MarkDownResource {
 
     @Inject
-    ConfService confService;
+    ConfServiceOld confService;
 
     @Inject
-    FileService fileService;
+    FileServiceImpl fileService;
 
     @GET
     public Response getAllInfo() {
