@@ -45,14 +45,15 @@ public class DirResource {
     @GET
     @Path("/parent/{parent}")
     public Response getDirByParent(@PathParam("parent") String parent) {
-        List<List<String>> list = new LinkedList<>();
+        List<List<Object>> list = new LinkedList<>();
         confService.getNoteDirs().forEach((k, v) -> {
             if (v.getFather().equals(parent)) {
-                List<String> item = new LinkedList<>();
+                List<Object> item = new LinkedList<>();
                 item.add(v.getName());
                 item.add(v.getPath());
-                item.add(v.getNote_nums() + "");
-                item.add(v.getType() + "");
+                item.add(v.getNote_nums());
+                item.add(v.getDir_nums());
+                item.add(v.getType());
                 list.add(item);
             }
         });

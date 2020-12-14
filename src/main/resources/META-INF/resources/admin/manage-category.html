@@ -218,6 +218,27 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+<!-- del Modal-->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delModalLabel">确定删除?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">删除该分类后，该分类下面的文章和子分类都会被删除哦😯</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <a class="btn btn-danger" onclick="delCate">删除</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -262,6 +283,52 @@
         })
     }
 
+    function buildNavs(path) {
+
+    }
+
+    function delCate(name) {
+        console.log("删除 -> " + name)
+    }
+
+    function changeName(name) {
+        console.log("修改名称 -> " + name)
+    }
+
+    function manageName(path) {
+        console.log("管理子分类 -> " + path)
+        const navs = path.split("/");
+        const length = navs.length;
+        console.log(navs)
+        console.log(length)
+        let index = 0;
+        let str = "";
+        while (index !== length) {
+
+            if (index > 0 && index === length - 1) {
+                console.log("1->" + navs[index])
+                str = str + '<li class="breadcrumb-item active" aria-current="page">' + navs[index] + '</li>'
+            } else if (index > 0) {
+                console.log("2->" + navs[index])
+                str = str + '<li class="breadcrumb-item"><a href="#">' + navs[index] + '</a></li>'
+            }
+            index++;
+        }
+        $(".breadcrumb").html(str);
+    }
+
+    function delIntro(name) {
+        console.log("删除介绍 -> " + name)
+    }
+
+    function newIntro(name) {
+        console.log("新建介绍 -> " + name)
+    }
+
+    function editIntro(name) {
+        console.log("编辑介绍 -> " + name)
+    }
+
     getChild("notes", function (child_data) {
         console.log(child_data)
         $(document).ready(function () {
@@ -272,15 +339,16 @@
                     {title: "分类名"},
                     {title: "路径"},
                     {title: "所含文章数"},
+                    {title: "所含子分类"},
                     {
                         title: "操作",
                         render: function (data, type, row, meta) {
-                            let opt = '<button type="button" class="btn btn-primary">新建介绍页</button> ';
-                            if (data === '0') {
-                                opt = ' <button type="button" class="btn btn-info">修改介绍页</button> <button type="button" class="btn btn-danger">删除介绍页</button>  ';
+                            const name = row[0];
+                            let opt = '<button type="button" class="btn btn-primary" onclick="newIntro(\'' + name + '\')">新建介绍页</button> ';
+                            if (data === 0) {
+                                opt = ' <button type="button" class="btn btn-info" onclick="editIntro(\'' + name + '\')">修改介绍页</button> <button type="button" class="btn btn-danger" onclick="delIntro(\'' + name + '\')">删除介绍页</button>  ';
                             }
-
-                            return '<button type="button" class="btn btn-warning">管理子分类</button> <button type="button" class="btn btn-info">修改名称</button> <button type="button" class="btn btn-danger">删除分类</button> ｜ ' + opt;
+                            return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ｜ ' + opt;
                         }
                     }
                 ]
