@@ -18,6 +18,8 @@ public class DirConf {
 
     private Integer id;
 
+    private Integer note_nums;
+
     //notes.md深度为0、归纳的展示页面与归纳的深度相同(1-3)、归纳的笔记深度等级为 2-4
     private Integer depth;
 

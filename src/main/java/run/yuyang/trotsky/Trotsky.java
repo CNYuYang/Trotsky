@@ -50,7 +50,7 @@ public class Trotsky implements QuarkusApplication {
             return help();
         }
         String cmd = args[0];
-        switch (cmd) {  
+        switch (cmd) {
             case "-v":
             case "--version":
                 return version();
@@ -79,6 +79,7 @@ public class Trotsky implements QuarkusApplication {
                 confService.readConfFromFile(fileService.getRelPath(path));
                 System.out.println(banner);
                 System.out.println("\n\n    trotsky is listening port : " + port + " \n    the URL is http://127.0.0.1:" + port);
+                System.out.println("\n\n    trotsky`s dashboard is worker on  http://127.0.0.1:" + port + "/admin");
                 Quarkus.waitForExit();
                 return 0;
             }

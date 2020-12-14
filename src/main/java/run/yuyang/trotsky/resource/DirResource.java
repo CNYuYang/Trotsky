@@ -42,4 +42,21 @@ public class DirResource {
         return ResUtils.success(list);
     }
 
+    @GET
+    @Path("/parent/{parent}")
+    public Response getDirByParent(@PathParam("parent") String parent) {
+        List<List<String>> list = new LinkedList<>();
+        confService.getNoteDirs().forEach((k, v) -> {
+            if (v.getFather().equals(parent)) {
+                List<String> item = new LinkedList<>();
+                item.add(v.getName());
+                item.add(v.getPath());
+                item.add(v.getNote_nums()+"");
+                item.add("");
+                list.add(item);
+            }
+        });
+        return ResUtils.success(list);
+    }
+
 }

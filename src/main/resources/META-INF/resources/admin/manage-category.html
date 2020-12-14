@@ -11,7 +11,7 @@
     <link href="../css/all.min.css" rel="stylesheet" type="text/css">
     <link href="../css/nunito.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/fileinput.css" rel="stylesheet">
+    <link href="../css/datatables.min.css" rel="stylesheet">
 
 </head>
 
@@ -73,7 +73,7 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-            <a class="nav-link" href="manage-catagory.html">
+            <a class="nav-link" href="manage-category.html">
                 <i class="fas fa-fw fa-table"></i>
                 <span>收纳管理</span></a>
         </li>
@@ -178,15 +178,14 @@
 
                     <div class="col-lg-12 mb-4">
 
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">现有分类</h6>
-                            </div>
-                            <div class="card-body">
-                                <div id="tree"></div>
-                            </div>
-                        </div>
+                        <nav aria-label="breadcrumb">
+
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">Notes</li>
+                            </ol>
+                        </nav>
+
+                        <table id="dataTable" class="display" width="100%"></table>
 
                     </div>
 
@@ -242,37 +241,42 @@
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/bootstrap-treeview.min.js"></script>
+<script src="../js/datatables.min.js"></script>
 
 <script>
-    var tree = [];
 
-    $.ajax({
-        url: "/admin/dir/type/0",
-        type: "GET",
-        contentType: "application/json",
-        dataType: "json",
-        success: function (data) {
-            data = data.result;
-            data.forEach(obj => {
-                tree.push({
-                    text: obj.name
-                })
-            })
-            $('#tree').treeview({data: tree});
+    function getChild(parent, func) {
+        let child_data = [];
 
-            $('#tree').on('nodeSelected', function (event, data) {
-                selectNode = data.text;
+        $.ajax({
+            url: "/admin/dir/parent/" + parent,
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                if (data.code === 200) {
+                    child_data = data.result;
+                    func(child_data);
+                }
+            }
+        })
+    }
+
+    getChild("notes", function (child_data) {
+        console.log(child_data)
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                data: child_data,
+                columns: [
+                    {title: "分类名"},
+                    {title: "路径"},
+                    {title: "所含文章数"},
+                    {title: "操作"}
+                ]
             });
-
-            $('#tree').on('nodeUnselected', function (event, data) {
-                selectNode = "";
-            });
-
-        }
+        });
     })
 
-    var selectNode = "";
 
 </script>
 
