@@ -21,4 +21,4 @@ echo "➡️ 开始构建"
 
 gradle build -Dquarkus.package.type=native -Dquarkus.native.additional-build-args=-H:ResourceConfigurationFiles=resources-config.json
 
-
+cp ./build/trotsky-beta-runner trotsky
