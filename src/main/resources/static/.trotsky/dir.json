@@ -5,7 +5,9 @@
     "path": "/notes",
     "id": 0,
     "depth": 0,
-    "type": 0
+    "type": 0,
+    "note_nums":0,
+    "dir_nums":0
   },
   {
     "name": "被背叛的革命",
@@ -13,7 +15,9 @@
     "path": "/notes/被背叛的革命",
     "id": 1,
     "depth": 1,
-    "type": 0
+    "type": 0,
+    "note_nums":2,
+    "dir_nums":0
   },
   {
     "name": "论苏俄革命与国际形势的四篇报导",
@@ -21,6 +25,8 @@
     "path": "/notes/论苏俄革命与国际形势的四篇报导",
     "id": 2,
     "depth": 1,
-    "type": 1
+    "type": 1,
+    "note_nums":2,
+    "dir_nums":0
   }
 ]

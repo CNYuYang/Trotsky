@@ -284,7 +284,25 @@
     }
 
     function buildNavs(path) {
+        const navs = path.split("/");
+        const length = navs.length;
+        let index = 0;
+        let str = "";
+        let old_path = "";
 
+        while (index !== length) {
+
+            if (index > 0 && index === length - 1) {
+                console.log("1->" + navs[index])
+                str = str + '<li class="breadcrumb-item active" aria-current="page">' + navs[index] + '</li>'
+            } else if (index > 0) {
+                old_path = old_path + "/" + navs[index];
+                console.log("2->" + navs[index])
+                str = str + '<li class="breadcrumb-item"><a href="#" onclick="manageName(\'' + old_path + '\')">' + navs[index] + '</a></li>'
+            }
+            index++;
+        }
+        $(".breadcrumb").html(str);
     }
 
     function delCate(name) {
@@ -297,24 +315,19 @@
 
     function manageName(path) {
         console.log("管理子分类 -> " + path)
-        const navs = path.split("/");
-        const length = navs.length;
-        console.log(navs)
-        console.log(length)
-        let index = 0;
-        let str = "";
-        while (index !== length) {
-
-            if (index > 0 && index === length - 1) {
-                console.log("1->" + navs[index])
-                str = str + '<li class="breadcrumb-item active" aria-current="page">' + navs[index] + '</li>'
-            } else if (index > 0) {
-                console.log("2->" + navs[index])
-                str = str + '<li class="breadcrumb-item"><a href="#">' + navs[index] + '</a></li>'
+        let navs = path.split("/");
+        buildNavs(path);
+        console.log(navs[navs.length - 1])
+        getChild(navs[navs.length - 1], function (child_data) {
+            var table = $('#dataTable').DataTable();
+            table.clear().draw();
+            if (child_data.length > 0) {
+                child_data.forEach(obj => {
+                    table.row.add(obj).draw(false);
+                })
             }
-            index++;
-        }
-        $(".breadcrumb").html(str);
+            console.log(child_data)
+        })
     }
 
     function delIntro(name) {
