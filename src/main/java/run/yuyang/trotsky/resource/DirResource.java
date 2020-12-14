@@ -51,8 +51,8 @@ public class DirResource {
                 List<String> item = new LinkedList<>();
                 item.add(v.getName());
                 item.add(v.getPath());
-                item.add(v.getNote_nums()+"");
-                item.add("");
+                item.add(v.getNote_nums() + "");
+                item.add(v.getType() + "");
                 list.add(item);
             }
         });

@@ -267,11 +267,22 @@
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 data: child_data,
+                ordering: false,
                 columns: [
                     {title: "分类名"},
                     {title: "路径"},
                     {title: "所含文章数"},
-                    {title: "操作"}
+                    {
+                        title: "操作",
+                        render: function (data, type, row, meta) {
+                            let opt = '<button type="button" class="btn btn-primary">新建介绍页</button> ';
+                            if (data === '0') {
+                                opt = ' <button type="button" class="btn btn-info">修改介绍页</button> <button type="button" class="btn btn-danger">删除介绍页</button>  ';
+                            }
+
+                            return '<button type="button" class="btn btn-warning">管理子分类</button> <button type="button" class="btn btn-info">修改名称</button> <button type="button" class="btn btn-danger">删除分类</button> ｜ ' + opt;
+                        }
+                    }
                 ]
             });
         });
