@@ -1,11 +1,14 @@
 package run.yuyang.trotsky.resource;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.file.FileSystem;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.param.MDParam;
 import run.yuyang.trotsky.model.vo.TreeVO;
-import run.yuyang.trotsky.service.ConfServiceOld;
-import run.yuyang.trotsky.service.impl.FileServiceImpl;
+import run.yuyang.trotsky.service.ConfService;
+import run.yuyang.trotsky.service.DirService;
+import run.yuyang.trotsky.service.NoteService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,21 +26,27 @@ import java.util.List;
 public class MarkDownResource {
 
     @Inject
-    ConfServiceOld confService;
+    Vertx vertx;
 
     @Inject
-    FileServiceImpl fileService;
+    ConfService confService;
+
+    @Inject
+    NoteService noteService;
+
+    @Inject
+    DirService dirService;
 
     @GET
     public Response getAllInfo() {
-        return ResUtils.success(confService.getNoteConfs());
+        return ResUtils.success(noteService.getNotes());
     }
 
     @GET
     @Path("/info/{name}")
     public Response getInfoByName(@PathParam("name") String name) {
-        if (confService.existNoteConf(name)) {
-            return ResUtils.success(confService.getNoteConf(name));
+        if (noteService.existNote(name)) {
+            return ResUtils.success(noteService.getNote(name));
         } else {
             return ResUtils.failure("未找到该文件信息");
         }
@@ -47,7 +56,7 @@ public class MarkDownResource {
     @Path("/info/all")
     public Response getAllMdInfo() {
         List<TreeVO> list = new LinkedList<>();
-        confService.getNoteConfs().forEach((k, v) -> {
+        noteService.getNotes().forEach((k, v) -> {
             list.add(TreeVO.builder()
                     .name(v.getName())
                     .path(v.getPath())
@@ -59,8 +68,9 @@ public class MarkDownResource {
     @GET
     @Path("/{name}")
     public Response getText(@PathParam("name") String name) {
-        if (confService.existNoteConf(name) && fileService.existFile(confService.getNotePath(name))) {
-            return ResUtils.success(fileService.getFileSync(confService.getNotePath(name)));
+        FileSystem fileSystem = vertx.fileSystem();
+        if (noteService.existNote(name) && fileSystem.existsBlocking(confService.getWorkerPath() + "/" + name)) {
+            return ResUtils.success(fileSystem.readFileBlocking(confService.getWorkerPath() + "/" + name).toString());
         }
         return null;
     }
@@ -68,8 +78,9 @@ public class MarkDownResource {
 
     @POST
     public Response newFile(MDParam param) {
-        if (confService.existDirConf(param.getFather())) {
-            fileService.saveNewFile(confService.getRelPath(param), param.getText(), NoteConf.map(param, confService.getNotePath(param.getFather()), confService.getCountConf().getNextNoteId(), confService.getDirConf(param.getFather()).getDepth() + 1));
+        if (dirService.exist(param.getFather())) {
+            //TODO fixbug
+            //fileService.saveNewFile(confService.getRelPath(param), param.getText(), NoteConf.map(param, confService.getNotePath(param.getFather()), confService.getCountConf().getNextNoteId(), confService.getDirConf(param.getFather()).getDepth() + 1));
             return ResUtils.success();
         } else {
             return ResUtils.failure();
@@ -79,8 +90,8 @@ public class MarkDownResource {
     @DELETE
     @Path("/{name}")
     public Response delNotes(@PathParam("name") String name) {
-        if (confService.existNoteConf(name)) {
-            fileService.delFile(confService.getNotePath(name), name);
+        if (noteService.existNote(name)) {
+            noteService.delNoteAndSave(name);
             return ResUtils.success();
         } else {
             return ResUtils.failure("未找到该文件信息");

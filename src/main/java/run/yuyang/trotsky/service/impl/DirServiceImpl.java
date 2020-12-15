@@ -8,10 +8,12 @@ import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.DirService;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@ApplicationScoped
 public class DirServiceImpl implements DirService {
 
 

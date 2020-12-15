@@ -4,10 +4,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.NoteConf;
-import run.yuyang.trotsky.service.ConfService;
-import run.yuyang.trotsky.service.DirService;
-import run.yuyang.trotsky.service.IndexService;
-import run.yuyang.trotsky.service.NoteService;
+import run.yuyang.trotsky.service.*;
 
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,7 +19,7 @@ import java.util.Map;
  * @author YuYang
  */
 @ApplicationScoped
-public class PageServiceImpl {
+public class PageServiceImpl implements PageService {
 
     @Inject
     DirService dirService;

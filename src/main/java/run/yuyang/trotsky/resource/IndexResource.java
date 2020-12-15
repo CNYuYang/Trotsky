@@ -1,6 +1,6 @@
 package run.yuyang.trotsky.resource;
 
-import run.yuyang.trotsky.service.ConfServiceOld;
+import run.yuyang.trotsky.service.ConfService;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -18,7 +18,7 @@ import java.io.File;
 public class IndexResource {
 
     @Inject
-    ConfServiceOld confService;
+    ConfService confService;
 
     @GET
     @Produces(MediaType.TEXT_HTML)

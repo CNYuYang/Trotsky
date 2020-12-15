@@ -8,8 +8,10 @@ import run.yuyang.trotsky.model.conf.UserConf;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.CountService;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+@ApplicationScoped
 public class CountServiceImpl implements CountService {
 
     private static final String FILE_NAME = "/.trotsky/count.json";

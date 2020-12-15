@@ -16,21 +16,27 @@ public class DirConf {
 
     private String path;
 
-    private Integer id;
+    private int id;
 
-    private Integer note_nums;
+    private int note_nums;
 
-    private Integer dir_nums;
+    private int dir_nums;
 
     //notes.md深度为0、归纳的展示页面与归纳的深度相同(1-3)、归纳的笔记深度等级为 2-4
-    private Integer depth;
+    private int depth;
 
     // 0-带展示页面的归类的展示页面 1-不带展示页面的归类的展示页面
-    private Integer type;
+    private int type;
 
 
     public DirConf() {
 
+    }
+
+    public static DirConf defaultConf() {
+        DirConf dirConf = new DirConf();
+        dirConf.setType(1);
+        return dirConf;
     }
 
 }

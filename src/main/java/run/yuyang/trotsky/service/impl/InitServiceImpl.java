@@ -58,7 +58,7 @@ public class InitServiceImpl implements InitService {
         userConf.setNickName("Trotsky");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         userConf.setBuildTime(format.format(new Date()));
-        userService.save();
+        userService.saveBlocking();
         System.out.println("☭ 亲爱的达瓦里希，项目创建完成！");
     }
 

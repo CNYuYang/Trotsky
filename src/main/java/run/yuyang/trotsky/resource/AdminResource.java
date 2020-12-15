@@ -9,8 +9,10 @@ import run.yuyang.trotsky.model.conf.IndexConf;
 import run.yuyang.trotsky.model.param.InfoParam;
 import run.yuyang.trotsky.model.param.LoginParam;
 import run.yuyang.trotsky.model.vo.UserVO;
+import run.yuyang.trotsky.service.AuthService;
 import run.yuyang.trotsky.service.ConfService;
-import run.yuyang.trotsky.service.impl.PageServiceImpl;
+import run.yuyang.trotsky.service.PageService;
+import run.yuyang.trotsky.service.UserService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -21,7 +23,6 @@ import java.io.*;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author YuYang
@@ -36,12 +37,18 @@ public class AdminResource {
     ConfService confService;
 
     @Inject
-    PageServiceImpl pageService;
+    PageService pageService;
+
+    @Inject
+    AuthService authService;
+
+    @Inject
+    UserService userService;
 
     @GET()
     @Produces(MediaType.TEXT_HTML)
     public Uni<String> home(@CookieParam("uuid") String uuid) {
-        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+        if (!authService.auth(uuid)) {
             return vertx.fileSystem().readFile("META-INF/resources/admin/login.html")
                     .onItem().transform(b -> b.toString("UTF-8"));
         } else {
@@ -55,10 +62,9 @@ public class AdminResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginParam param) {
-        if (param.getEmail().equals(confService.getUserConf().getEmail()) && param.getPassword().equals(confService.getUserConf().getPassword())) {
-            String uuid = UUID.randomUUID().toString();
+        if (param.getEmail().equals(userService.getUser().getEmail()) && param.getPassword().equals(userService.getUser().getPassword())) {
+            String uuid = authService.token();
             NewCookie cookie = new NewCookie("uuid", uuid);
-            confService.setUUID(uuid);
             return Response.ok(ResUtils.success).cookie(cookie).build();
         } else {
             return ResUtils.failure();
@@ -69,10 +75,10 @@ public class AdminResource {
     @Path("/info/nickName")
     @Produces(MediaType.APPLICATION_JSON)
     public Response nickName(@CookieParam("uuid") String uuid) throws ParseException {
-        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+        if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
         } else {
-            return ResUtils.success(confService.getUserConf().getNickName());
+            return ResUtils.success(userService.getUser().getNickName());
         }
     }
 
@@ -80,12 +86,12 @@ public class AdminResource {
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     public Response info(@CookieParam("uuid") String uuid) throws ParseException {
-        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+        if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
         } else {
             UserVO info = UserVO.builder()
-                    .nickName(confService.getUserConf().getNickName())
-                    .email(confService.getUserConf().getEmail())
+                    .nickName(userService.getUser().getNickName())
+                    .email(userService.getUser().getEmail())
                     .build();
             return ResUtils.success(info);
         }
@@ -96,14 +102,14 @@ public class AdminResource {
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     public Response info(@CookieParam("uuid") String uuid, InfoParam param) throws ParseException {
-        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+        if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
         } else {
             if (!param.getPassword().equals("")) {
-                confService.getUserConf().setPassword(param.getPassword());
+                userService.getUser().setPassword(param.getPassword());
             }
-            confService.getUserConf().setNickName(param.getNickName());
-            confService.saveUserConf();
+            userService.getUser().setNickName(param.getNickName());
+            userService.save();
             return ResUtils.success();
         }
     }
@@ -112,10 +118,10 @@ public class AdminResource {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     public Response getSetting(@CookieParam("uuid") String uuid) {
-        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+        if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
         } else {
-            return ResUtils.success(confService.getIndexConf());
+            return ResUtils.success(userService.getUser());
         }
     }
 
@@ -123,13 +129,13 @@ public class AdminResource {
     @Produces(MediaType.APPLICATION_JSON)
     @PUT
     public Response changeSetting(@CookieParam("uuid") String uuid, IndexConf indexConf) {
-        if (null == uuid || "".equals(uuid) || !uuid.equals(confService.getUUID())) {
+        if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
         } else {
-            confService.setIndexConf(indexConf);
-            confService.saveIndexConf();
-            pageService.updateCoverPage();
-            pageService.updateIndexPage();
+//            confService.setIndexConf(indexConf);
+//            confService.saveIndexConf();
+//            pageService.updateCoverPage();
+//            pageService.updateIndexPage();
             return ResUtils.success(indexConf);
         }
     }
