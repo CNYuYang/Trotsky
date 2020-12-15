@@ -86,5 +86,30 @@ public class DirServiceImpl implements DirService {
         return null;
     }
 
+    @Override
+    public boolean changeName(String oldName, String newName) {
+        if (exist(oldName) && !exist(newName)) {
+            DirConf dirConf = getDir(oldName);
+            String oldPath = dirConf.getPath();
+            String newPath = getDir(dirConf.getFather()).getPath() + "/" + newName;
+            delDir(oldName);
+            dirConf.setName(newName);
+            dirConf.setPath(newPath);
+            addDir(dirConf);
+            vertx.fileSystem().move(confService.getWorkerPath() + oldPath, confService.getWorkerPath() + newPath, res -> {
+
+            });
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delDir(String name) {
+        if (exist(name)) {
+            dirs.remove(name);
+        }
+        return false;
+    }
+
 
 }

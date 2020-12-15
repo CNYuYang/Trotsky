@@ -1,5 +1,6 @@
 package run.yuyang.trotsky.resource;
 
+import io.vertx.core.Vertx;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.param.ChangeDirNameParam;
@@ -22,6 +23,9 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class DirResource {
+
+    @Inject
+    Vertx vertx;
 
     @Inject
     ConfService confService;
@@ -72,7 +76,7 @@ public class DirResource {
         if (dirService.exist(newDirParam.getChild())) {
             ResUtils.failure("已存在该名称的分类");
         }
-        if (!dirService.exist(newDirParam.getParent())){
+        if (!dirService.exist(newDirParam.getParent())) {
             ResUtils.failure("未找到父分类");
         }
         DirConf dirConf = DirConf.defaultConf();
@@ -81,18 +85,21 @@ public class DirResource {
         dirConf.setName(newDirParam.getChild());
         dirConf.setFather(newDirParam.getParent());
         dirConf.setPath(parent.getPath() + "/" + newDirParam.getChild());
-        dirService.addDir(dirConf);
-        parent.setDir_nums(parent.getDir_nums() + 1);
-        dirService.save();
-
-        return ResUtils.success();
+        boolean status = dirService.addDir(dirConf);
+        if (status) {
+            parent.setDir_nums(parent.getDir_nums() + 1);
+            dirService.save();
+            vertx.fileSystem().mkdirBlocking(confService.getWorkerPath() + dirConf.getPath());
+            return ResUtils.success();
+        } else {
+            return ResUtils.failure();
+        }
     }
 
     @PUT
     @Path("/change/name")
     public Response changeName(ChangeDirNameParam changeDirNameParam) {
-
-
+        dirService.changeName(changeDirNameParam.getOldName(), changeDirNameParam.getNewName());
         return ResUtils.success();
     }
 

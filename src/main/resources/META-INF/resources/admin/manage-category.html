@@ -243,6 +243,29 @@
     </div>
 </div>
 
+<!-- change name Modal-->
+<div class="modal fade" id="nameModal" tabindex="-1" role="dialog" aria-labelledby="nameModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nameModalLabel">修改分类名称?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">新分类的名称：
+                <input class="form-control" id="input_change_name">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="changeNameing()">修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- del Modal-->
 <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel"
      aria-hidden="true">
@@ -337,6 +360,7 @@
         let index = 0;
         let str = "";
         let old_path = "";
+        let change_name = "";
 
         while (index !== length) {
 
@@ -359,6 +383,29 @@
 
     function changeName(name) {
         console.log("修改名称 -> " + name)
+        change_name = name;
+        $("#input_change_name").val(name);
+    }
+
+    function changeNameing() {
+        const text = $("#input_change_name").val();
+        const data = {
+            "oldName": change_name,
+            "newName": text
+        };
+        $.ajax({
+            url: "/admin/dir/change/name",
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function (data) {
+                if (data.code === 200) {
+                    console.log("ok")
+                    manageName(op_path);
+                }
+            }
+        })
     }
 
     function manageName(path) {
@@ -410,7 +457,7 @@
                             if (data === 0) {
                                 opt = ' <button type="button" class="btn btn-info" onclick="editIntro(\'' + name + '\')">修改介绍页</button> <button type="button" class="btn btn-danger" onclick="delIntro(\'' + name + '\')">删除介绍页</button>  ';
                             }
-                            return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ｜ ' + opt;
+                            return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameModal" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ｜ ' + opt;
                         }
                     }
                 ]

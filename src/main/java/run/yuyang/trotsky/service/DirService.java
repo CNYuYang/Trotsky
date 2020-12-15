@@ -15,4 +15,8 @@ public interface DirService extends SerializableService {
 
     DirConf getDir(String name);
 
+    boolean changeName(String oldName, String newName);
+
+    boolean delDir(String name);
+
 }
