@@ -107,7 +107,12 @@ public class DirResource {
     @DELETE
     @Path("/name/{name}")
     public Response delByName(@PathParam("name") String name) {
-
+        DirConf dirConf = dirService.getDir(name);
+        vertx.fileSystem().deleteBlocking(confService.getWorkerPath() +  dirConf.getPath());
+        DirConf parent = dirService.getDir(dirConf.getFather());
+        parent.setDir_nums(parent.getDir_nums() - 1);
+        dirService.delDir(name);
+        dirService.save();
         return ResUtils.success();
     }
 

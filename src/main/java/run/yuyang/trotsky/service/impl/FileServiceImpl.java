@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
                 "notes/论苏俄革命与国际形势的四篇报导/答纽约泰晤士报编辑部的问题.md"
         };
         String[] dirs = new String[]{
-                "img", ".trotsky", "notes", "js", "css", "webfonts", "notes", "notes/被背叛的革命", "notes/论苏俄革命与国际形势的四篇报导"
+                "img", ".trotsky", "notes", "js", "css", "webfonts", "notes/被背叛的革命", "notes/论苏俄革命与国际形势的四篇报导"
         };
         for (String dir : dirs) {
             String dirPath = path + "/" + dir;

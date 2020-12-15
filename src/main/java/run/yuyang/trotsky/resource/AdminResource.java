@@ -51,10 +51,10 @@ public class AdminResource {
         if (!authService.auth(uuid)) {
             return vertx.fileSystem().readFile("META-INF/resources/admin/login.html")
                     .onItem().transform(b -> b.toString("UTF-8"));
-        } else {
-            return vertx.fileSystem().readFile("META-INF/resources/admin/home.html")
-                    .onItem().transform(b -> b.toString("UTF-8"));
         }
+        return vertx.fileSystem().readFile("META-INF/resources/admin/home.html")
+                .onItem().transform(b -> b.toString("UTF-8"));
+
     }
 
     @POST
@@ -77,9 +77,9 @@ public class AdminResource {
     public Response nickName(@CookieParam("uuid") String uuid) throws ParseException {
         if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
-        } else {
-            return ResUtils.success(userService.getUser().getNickName());
         }
+        return ResUtils.success(userService.getUser().getNickName());
+
     }
 
     @GET
@@ -88,13 +88,12 @@ public class AdminResource {
     public Response info(@CookieParam("uuid") String uuid) throws ParseException {
         if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
-        } else {
-            UserVO info = UserVO.builder()
-                    .nickName(userService.getUser().getNickName())
-                    .email(userService.getUser().getEmail())
-                    .build();
-            return ResUtils.success(info);
         }
+        UserVO info = UserVO.builder()
+                .nickName(userService.getUser().getNickName())
+                .email(userService.getUser().getEmail())
+                .build();
+        return ResUtils.success(info);
     }
 
 
@@ -104,14 +103,13 @@ public class AdminResource {
     public Response info(@CookieParam("uuid") String uuid, InfoParam param) throws ParseException {
         if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
-        } else {
-            if (!param.getPassword().equals("")) {
-                userService.getUser().setPassword(param.getPassword());
-            }
-            userService.getUser().setNickName(param.getNickName());
-            userService.save();
-            return ResUtils.success();
         }
+        if (!param.getPassword().equals("")) {
+            userService.getUser().setPassword(param.getPassword());
+        }
+        userService.getUser().setNickName(param.getNickName());
+        userService.save();
+        return ResUtils.success();
     }
 
     @Path("/setting")
@@ -120,9 +118,9 @@ public class AdminResource {
     public Response getSetting(@CookieParam("uuid") String uuid) {
         if (!authService.auth(uuid)) {
             return ResUtils.failure("No Authenticate");
-        } else {
-            return ResUtils.success(userService.getUser());
         }
+        return ResUtils.success(userService.getUser());
+
     }
 
     @Path("/setting")
