@@ -133,10 +133,11 @@ public class DirResource {
     @Path("/intro/{name}")
     public Response delDirIntro(@PathParam("name") String name) {
         DirConf dirConf = dirService.getDir(name);
-        DirConf parent = dirService.getDir(dirConf.getFather());
         dirConf.setType(1);
-        parent.setNote_nums(parent.getNote_nums() + 1);
         noteService.delNote(name + ".md");
+        vertx.fileSystem().delete(confService.getWorkerPath() + "/" + dirConf.getPath(), res -> {
+
+        });
         noteService.save();
         dirService.save();
         return ResUtils.success();
@@ -160,7 +161,6 @@ public class DirResource {
 
         });
         noteService.addNote(noteConf);
-        parent.setNote_nums(parent.getNote_nums() + 1);
         dirConf.setType(0);
         noteService.save();
         dirService.save();

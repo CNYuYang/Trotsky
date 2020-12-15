@@ -11,7 +11,7 @@
     <link href="../css/all.min.css" rel="stylesheet" type="text/css">
     <link href="../css/nunito.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/fileinput.css" rel="stylesheet">
+    <link href="../css/datatables.min.css" rel="stylesheet">
 
 </head>
 
@@ -174,7 +174,17 @@
 
                 <!-- Content Row -->
                 <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <nav aria-label="breadcrumb">
 
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">notes</li>
+                            </ol>
+                        </nav>
+
+                        <table id="dataTable" class="display" width="100%"></table>
+
+                    </div>
                 </div>
 
             </div>
@@ -227,79 +237,50 @@
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/fileinput.js"></script>
-<script src="../js/zh.js"></script>
-
+<script src="../js/datatables.min.js"></script>
 
 <script>
-    function initFileInput(ctrlName, uploadUrl) {
-        var control = $('#' + ctrlName);
-        control.fileinput({
-            resizeImage: true,
-            resizePreference: 'width',
-            language: 'zh', //设置语言
-            uploadUrl: uploadUrl,//上传地址
-            uploadAsync: true,
-            allowedFileExtensions: ['jpg', 'png', 'gif'], //接收的文件后缀
-            showUpload: true, //是否显示上传按钮
-            showCaption: true, //是否显示标题
-            browseClass: "btn btn-primary", //按钮样式
-            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
-            maxFileCount: 10,//上传的最多文件数为10
-            msgFilesTooMany: "选择图片超过了最大数量"
-        });
-    };
 
-    //初始化控件initFileInput(id,uploadurl)控件id，与上传路径
+    function getChild(parent, func) {
+        let child_data = [];
 
-    initFileInput("file-file", "/admin/images/upload");
-
-    $("#file-file").on("fileuploaded",
-        function (event, data) {
-            if (data.response) {
-                // 根据上传的返回值，按需处理
-            }
-        });
-
-    $.ajax({
-            url: "/admin/info",
+        $.ajax({
+            url: "/admin/note/type/0",
             type: "GET",
             contentType: "application/json",
             dataType: "json",
             success: function (data) {
-                console.log(data.result)
                 if (data.code === 200) {
-                    $("#input_email").attr("value", data.result.email);
-                    $("#input_nickname").attr("value", data.result.nickName);
+                    child_data = data.result;
+                    func(child_data);
                 }
             }
-        }
-    )
+        })
+    }
 
-    function saveSetting() {
-        var psw = $("#input_password").val();
-        var psw2 = $("#input_password_re").val();
-        if (psw === psw2) {
-            var data = {};
-            data.password = psw;
-            data.nickName = $("#input_nickname").val();
-            $.ajax({
-                    url: "/admin/info",
-                    type: "PUT",
-                    contentType: "application/json",
-                    data: JSON.stringify(data),
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data.result)
-                        if (data.code === 200) {
-
+    getChild("notes", (child_data) => {
+        console.log(child_data)
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                data: child_data,
+                ordering: false,
+                columns: [
+                    {title: "文章名"},
+                    {title: "路径"},
+                    {title: "所属分类"},
+                    {title: "是否展示"},
+                    {
+                        title: "操作",
+                        render: function (data, type, row, meta) {
+                            const name = row[0];
+                            return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameModal" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ';
                         }
                     }
-                }
-            )
+                ]
+            });
+        });
+    });
 
-        }
-    }
 </script>
 
 </body>

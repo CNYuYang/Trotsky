@@ -20,10 +20,10 @@ import java.util.List;
 /**
  * @author YuYang
  */
-@Path("/admin/md")
+@Path("/admin/note")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class MarkDownResource {
+public class NoteResource {
 
     @Inject
     Vertx vertx;
@@ -98,5 +98,22 @@ public class MarkDownResource {
         }
     }
 
+    @GET
+    @Path("/type/{type}")
+    public Response getNotes(@PathParam("type") Integer type) {
+        List<List<Object>> list = new LinkedList<>();
+        noteService.getNotes().forEach((k, obj) -> {
+            if (obj.getType().equals(type)) {
+                List<Object> item = new LinkedList<>();
+                item.add(obj.getName());
+                item.add(obj.getPath());
+                item.add(obj.getFather());
+                item.add(obj.getShow());
+                item.add(0);
+                list.add(item);
+            }
+        });
+        return ResUtils.success(list);
+    }
 
 }
