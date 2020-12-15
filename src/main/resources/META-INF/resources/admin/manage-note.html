@@ -175,6 +175,8 @@
                 <!-- Content Row -->
                 <div class="row">
                     <div class="col-lg-12 mb-4">
+<!--                        TODO 下拉框选择-->
+
                         <nav aria-label="breadcrumb">
 
                             <ol class="breadcrumb">
@@ -273,7 +275,7 @@
                         title: "操作",
                         render: function (data, type, row, meta) {
                             const name = row[0];
-                            return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameModal" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ';
+                            return '<button type="button" class="btn btn-warning" onclick="manageNote(\'' + row[1] + '\')">管理文章</button> <button type="button" class="btn btn-danger" onclick="delNote(\'' + name + '\')">删除文章</button> ';
                         }
                     }
                 ]
