@@ -69,6 +69,12 @@ public class DirResource {
 
     @POST
     public Response newDir(NewDirParam newDirParam) {
+        if (dirService.exist(newDirParam.getChild())) {
+            ResUtils.failure("已存在该名称的分类");
+        }
+        if (!dirService.exist(newDirParam.getParent())){
+            ResUtils.failure("未找到父分类");
+        }
         DirConf dirConf = DirConf.defaultConf();
         DirConf parent = dirService.getDir(newDirParam.getParent());
 

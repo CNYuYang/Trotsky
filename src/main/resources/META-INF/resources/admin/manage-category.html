@@ -312,10 +312,15 @@
 
     function newChild() {
         const text = $("#input_new_name").val();
+        const data = {
+            "parent": op_name,
+            "child": text
+        };
         $.ajax({
-            url: "/admin/dir/parent/" + op_name + "/child/" + text,
+            url: "/admin/dir",
             type: "POST",
             contentType: "application/json",
+            data: JSON.stringify(data),
             dataType: "json",
             success: function (data) {
                 if (data.code === 200) {
