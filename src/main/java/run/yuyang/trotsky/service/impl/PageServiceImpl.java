@@ -52,7 +52,8 @@ public class PageServiceImpl implements PageService {
         });
         Map<String, List<NoteConf>> notes = new HashMap<>();
         noteService.getNotes().forEach((k, v) -> {
-            if (v.getType() == 0 && v.getShow()) {
+//            if (v.getType() == 0 && v.getShow()) {
+            if (v.getShow()) {
                 if (!notes.containsKey(v.getFather())) {
                     notes.put(v.getFather(), new LinkedList<>());
                 }
@@ -98,11 +99,11 @@ public class PageServiceImpl implements PageService {
             } else {
                 builder.append("|").append("\n\n").append(newLine).append("├── ");
             }
-            if (nowDir.getType() == 1) {
-                builder.append(nowDir.getName());
-            } else {
-                builder.append("[").append(nowDir.getName()).append("](").append(nowDir.getPath()).append(".md)");
-            }
+//            if (nowDir.getType() == 1) {
+//                builder.append(nowDir.getName());
+//            } else {
+//                builder.append("[").append(nowDir.getName()).append("](").append(nowDir.getPath()).append(".md)");
+//            }
             if (isEnd && depth < 2) {
                 flag[depth] = false;
             }
@@ -200,17 +201,17 @@ public class PageServiceImpl implements PageService {
                     DirConf dirConf = new DirConf();
                     dirConf.setDepth(depth + 1);
                     dirConf.setFather(file.getName());
-                    dirConf.setId(dirCount++);
+//                    dirConf.setId(dirCount++);
                     dirConf.setName(files[i].getName());
                     dirConf.setPath(files[i].getAbsolutePath().replace(path, ""));
-                    dirConf.setType(0);
+//                    dirConf.setType(0);
                     map.get("dir").add(dirConf);
                 } else {
                     if (files[i].getName().matches(".*.md$")) {
                         NoteConf noteConf = new NoteConf();
                         noteConf.setDepth(depth + 1);
-                        noteConf.setType(0);
-                        noteConf.setId(noteCount++);
+//                        noteConf.setType(0);
+//                        noteConf.setId(noteCount++);
                         noteConf.setFather(file.getName());
                         noteConf.setName(files[i].getName());
                         noteConf.setShow(true);

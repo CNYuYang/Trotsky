@@ -3,6 +3,7 @@ package run.yuyang.trotsky.model.conf;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import run.yuyang.trotsky.model.base.Pair;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Data
 @RegisterForReflection
-@ToString
+@NoArgsConstructor
 public class IndexConf {
 
     private String title;

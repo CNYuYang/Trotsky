@@ -1,65 +1,30 @@
 [
   {
-    "name": "notes.md",
-    "father": "",
-    "path": "/notes.md",
-    "id": 0,
-    "depth": 0,
-    "type": 0,
-    "show": true
-  },
-  {
-    "name": "README.md",
-    "father": "",
-    "path": "/README.md",
-    "id": 0,
-    "depth": 0,
-    "type": 0,
-    "show": true
-  },
-  {
-    "name": "被背叛的革命.md",
-    "father": "notes",
-    "path": "/notes/被背叛的革命.md",
-    "id": 1,
-    "depth": 1,
-    "type": 3,
-    "show": true
-  },
-  {
     "name": "导言-本书的目的.md",
     "father": "被背叛的革命",
     "path": "/notes/被背叛的革命/导言-本书的目的.md",
-    "id": 2,
     "depth": 2,
-    "type": 0,
     "show": true
   },
   {
     "name": "第一章-已经成就了什么.md",
     "father": "被背叛的革命",
     "path": "/notes/被背叛的革命/第一章-已经成就了什么.md",
-    "id": 3,
     "depth": 2,
-    "type": 0,
     "show": true
   },
   {
     "name": "与美国联合通信社的代表谈话.md",
     "father": "论苏俄革命与国际形势的四篇报导",
     "path": "/notes/论苏俄革命与国际形势的四篇报导/与美国联合通信社的代表谈话.md",
-    "id": 4,
     "depth": 2,
-    "type": 0,
     "show": true
   },
   {
     "name": "答纽约泰晤士报编辑部的问题.md",
     "father": "论苏俄革命与国际形势的四篇报导",
     "path": "/notes/论苏俄革命与国际形势的四篇报导/答纽约泰晤士报编辑部的问题.md",
-    "id": 5,
     "depth": 2,
-    "type": 0,
     "show": true
   }
 ]

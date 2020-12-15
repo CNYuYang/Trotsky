@@ -11,6 +11,8 @@ public interface DirService extends SerializableService {
 
     boolean addDir(DirConf conf);
 
+    boolean addDirAndSave(DirConf conf);
+
     Map<String, DirConf> getDirs();
 
     DirConf getDir(String name);

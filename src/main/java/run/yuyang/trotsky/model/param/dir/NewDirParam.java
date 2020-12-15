@@ -1,4 +1,4 @@
-package run.yuyang.trotsky.model.param;
+package run.yuyang.trotsky.model.param.dir;
 
 import lombok.Getter;
 import lombok.Setter;

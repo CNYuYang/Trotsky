@@ -3,13 +3,10 @@ package run.yuyang.trotsky.resource;
 import io.vertx.core.Vertx;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.DirConf;
-import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.param.ChangeDirNameParam;
-import run.yuyang.trotsky.model.param.NewDirParam;
-import run.yuyang.trotsky.model.vo.TreeVO;
+import run.yuyang.trotsky.model.param.dir.NewDirParam;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.DirService;
-import run.yuyang.trotsky.service.NoteService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -35,28 +32,11 @@ public class DirResource {
     @Inject
     DirService dirService;
 
-    @Inject
-    NoteService noteService;
-
     @GET
     public Response getAll() {
         return ResUtils.success(dirService.getDirs());
     }
 
-    @GET
-    @Path("/type/{type}")
-    public Response getDirByType(@PathParam("type") Integer type) {
-        List<TreeVO> list = new LinkedList<>();
-        dirService.getDirs().forEach((k, v) -> {
-            if (v.getType() == type) {
-                list.add(TreeVO.builder()
-                        .name(v.getName())
-                        .path(v.getPath())
-                        .build());
-            }
-        });
-        return ResUtils.success(list);
-    }
 
     @GET
     @Path("/parent/{parent}")
@@ -69,7 +49,7 @@ public class DirResource {
                 item.add(v.getPath());
                 item.add(v.getNote_nums());
                 item.add(v.getDir_nums());
-                item.add(v.getType());
+                item.add(v.isHave_intro());
                 list.add(item);
             }
         });
@@ -84,17 +64,21 @@ public class DirResource {
         if (!dirService.exist(newDirParam.getParent())) {
             ResUtils.failure("未找到父分类");
         }
-        DirConf dirConf = DirConf.defaultConf();
-        DirConf parent = dirService.getDir(newDirParam.getParent());
+        String parentName = newDirParam.getParent();
+        String childName = newDirParam.getChild();
 
-        dirConf.setName(newDirParam.getChild());
-        dirConf.setFather(newDirParam.getParent());
+        DirConf dirConf = new DirConf();
+        DirConf parent = dirService.getDir(parentName);
+        dirConf.setName(childName);
+        dirConf.setFather(parentName);
         dirConf.setPath(parent.getPath() + "/" + newDirParam.getChild());
         boolean status = dirService.addDir(dirConf);
         if (status) {
-            parent.setDir_nums(parent.getDir_nums() + 1);
+            parent.addDir();
             dirService.save();
-            vertx.fileSystem().mkdirBlocking(confService.getWorkerPath() + dirConf.getPath());
+            vertx.fileSystem().mkdir(confService.getWorkerPath() + dirConf.getPath(), res -> {
+
+            });
             return ResUtils.success();
         } else {
             return ResUtils.failure();
@@ -102,13 +86,15 @@ public class DirResource {
     }
 
     @PUT
-    @Path("/change/name")
+    @Path("/name")
     public Response changeName(ChangeDirNameParam changeDirNameParam) {
-        dirService.changeName(changeDirNameParam.getOldName(), changeDirNameParam.getNewName());
-        String newPath = dirService.getDir(changeDirNameParam.getNewName()).getPath();
+        String newName = changeDirNameParam.getNewName();
+        String oldName = changeDirNameParam.getOldName();
+        dirService.changeName(oldName, newName);
+        String newPath = dirService.getDir(newName).getPath();
         dirService.getDirs().forEach((k, obj) -> {
-            if (obj.getFather().equals(changeDirNameParam.getOldName())) {
-                obj.setFather(changeDirNameParam.getNewName());
+            if (obj.getFather().equals(oldName)) {
+                obj.setFather(newName);
                 obj.setPath(newPath + "/" + obj.getName());
             }
         });
@@ -121,48 +107,11 @@ public class DirResource {
     @Path("/name/{name}")
     public Response delByName(@PathParam("name") String name) {
         DirConf dirConf = dirService.getDir(name);
-        vertx.fileSystem().deleteBlocking(confService.getWorkerPath() + dirConf.getPath());
-        DirConf parent = dirService.getDir(dirConf.getFather());
-        parent.setDir_nums(parent.getDir_nums() - 1);
+        vertx.fileSystem().delete(confService.getWorkerPath() + dirConf.getPath(), res -> {
+
+        });
+        dirService.getDir(dirConf.getFather()).delDir();
         dirService.delDir(name);
-        dirService.save();
-        return ResUtils.success();
-    }
-
-    @DELETE
-    @Path("/intro/{name}")
-    public Response delDirIntro(@PathParam("name") String name) {
-        DirConf dirConf = dirService.getDir(name);
-        dirConf.setType(1);
-        noteService.delNote(name + ".md");
-        vertx.fileSystem().delete(confService.getWorkerPath() + "/" + dirConf.getPath(), res -> {
-
-        });
-        noteService.save();
-        dirService.save();
-        return ResUtils.success();
-    }
-
-    @POST
-    @Path("/intro/{name}")
-    public Response newDirIntro(@PathParam("name") String name) {
-        DirConf dirConf = dirService.getDir(name);
-        DirConf parent = dirService.getDir(dirConf.getFather());
-        NoteConf noteConf = new NoteConf();
-        noteConf.setName(name + ".md");
-        noteConf.setShow(true);
-        noteConf.setFather(dirConf.getFather());
-        noteConf.setDepth(parent.getDepth() + 1);
-        //TODO ID
-        noteConf.setId(0);
-        noteConf.setType(1);
-        noteConf.setPath(parent.getPath() + "/" + name + ".md");
-        vertx.fileSystem().createFile(confService.getWorkerPath() + noteConf.getPath(), res -> {
-
-        });
-        noteService.addNote(noteConf);
-        dirConf.setType(0);
-        noteService.save();
         dirService.save();
         return ResUtils.success();
     }

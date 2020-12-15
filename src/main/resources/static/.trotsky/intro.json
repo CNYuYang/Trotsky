@@ -1,0 +1,17 @@
+[
+  {
+    "name": "notes",
+    "father": "",
+    "path": "/notes.md"
+  },
+  {
+    "name": "README",
+    "father": "",
+    "path": "/README.md"
+  },
+  {
+    "name": "被背叛的革命",
+    "father": "notes",
+    "path": "/notes/被背叛的革命.md"
+  }
+]

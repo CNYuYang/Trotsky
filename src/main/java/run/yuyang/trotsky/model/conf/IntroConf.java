@@ -11,7 +11,7 @@ import run.yuyang.trotsky.model.param.MDParam;
 @Data
 @RegisterForReflection
 @NoArgsConstructor
-public class NoteConf {
+public class IntroConf {
 
     private String name;
 
@@ -19,10 +19,10 @@ public class NoteConf {
 
     private String path;
 
-    //notes.md深度为0、归纳的展示页面与归纳的深度相同(1-3)、归纳的笔记深度等级为 2-4
-    private Integer depth;
-
-    //若上级分类有展示页面，则可以不展
-    private Boolean show;
+    public IntroConf(DirConf dirConf) {
+        this.father = dirConf.getFather();
+        this.name = dirConf.getName() + ".md";
+        this.path = dirConf.getPath() + ".md";
+    }
 
 }

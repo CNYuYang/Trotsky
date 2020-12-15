@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
     private static final String FILE_NAME = "/.trotsky/user.json";
 
-    UserConf userConf = new UserConf();
+    private UserConf userConf = new UserConf();
 
     @Inject
     Vertx vertx;

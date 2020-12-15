@@ -2,12 +2,14 @@ package run.yuyang.trotsky.model.conf;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author YuYang
  */
 @Data
 @RegisterForReflection
+@NoArgsConstructor
 public class DirConf {
 
     private String name;
@@ -15,8 +17,6 @@ public class DirConf {
     private String father;
 
     private String path;
-
-    private int id;
 
     private int note_nums;
 
@@ -26,17 +26,21 @@ public class DirConf {
     private int depth;
 
     // 0-带展示页面的归类的展示页面 1-不带展示页面的归类的展示页面
-    private int type;
+    private boolean have_intro;
 
-
-    public DirConf() {
-
+    public void addNote() {
+        note_nums++;
     }
 
-    public static DirConf defaultConf() {
-        DirConf dirConf = new DirConf();
-        dirConf.setType(1);
-        return dirConf;
+    public void delNote() {
+        note_nums--;
     }
 
+    public void addDir() {
+        dir_nums++;
+    }
+
+    public void delDir() {
+        dir_nums--;
+    }
 }

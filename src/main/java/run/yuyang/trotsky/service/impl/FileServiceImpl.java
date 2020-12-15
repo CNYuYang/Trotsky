@@ -17,7 +17,7 @@ public class FileServiceImpl implements FileService {
         FileSystem fileSystem = vertx.fileSystem();
         String[] files = new String[]{
                 "index.html", "README.md", "_coverpage.md", "notes.md",
-                ".trotsky/user.json", ".trotsky/index.json", ".trotsky/note.json", ".trotsky/count.json", ".trotsky/dir.json",
+                ".trotsky/user.json", ".trotsky/index.json", ".trotsky/note.json", ".trotsky/intro.json", ".trotsky/dir.json",
                 "img/avatar.jpg",
                 "js/docsify.min.js",
                 "css/vue.css", "css/index.css",

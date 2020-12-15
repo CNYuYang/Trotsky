@@ -74,6 +74,15 @@ public class DirServiceImpl implements DirService {
     }
 
     @Override
+    public boolean addDirAndSave(DirConf conf) {
+        boolean status = addDir(conf);
+        if (status) {
+            save();
+        }
+        return status;
+    }
+
+    @Override
     public Map<String, DirConf> getDirs() {
         return dirs;
     }
@@ -99,6 +108,7 @@ public class DirServiceImpl implements DirService {
             vertx.fileSystem().move(confService.getWorkerPath() + oldPath, confService.getWorkerPath() + newPath, res -> {
 
             });
+            return true;
         }
         return false;
     }
@@ -107,6 +117,7 @@ public class DirServiceImpl implements DirService {
     public boolean delDir(String name) {
         if (exist(name)) {
             dirs.remove(name);
+            return true;
         }
         return false;
     }

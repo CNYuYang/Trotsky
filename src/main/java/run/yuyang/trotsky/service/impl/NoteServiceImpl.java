@@ -61,6 +61,7 @@ public class NoteServiceImpl implements NoteService {
     public boolean delNote(String name) {
         if (existNote(name)) {
             notes.remove(name);
+            return true;
         }
         return false;
     }
