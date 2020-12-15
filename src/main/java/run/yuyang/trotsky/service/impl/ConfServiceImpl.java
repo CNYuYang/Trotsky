@@ -32,11 +32,15 @@ public class ConfServiceImpl implements ConfService {
     @Inject
     UserService userService;
 
+    @Inject
+    IntroService introService;
+
     @Override
     public void load() {
         dirService.load();
         indexService.load();
         noteService.load();
         userService.load();
+        introService.load();
     }
 }

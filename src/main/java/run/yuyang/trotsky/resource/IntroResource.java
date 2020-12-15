@@ -4,7 +4,6 @@ import io.vertx.core.Vertx;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.IntroConf;
-import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.DirService;
 import run.yuyang.trotsky.service.IntroService;
@@ -39,8 +38,9 @@ public class IntroResource {
     @Path("/name/{name}")
     public Response delDirIntro(@PathParam("name") String name) {
         DirConf dirConf = dirService.getDir(name);
+        IntroConf introConf = introService.getIntro(name);
         if (introService.delIntroAndSave(name)) {
-            vertx.fileSystem().delete(confService.getWorkerPath() + "/" + dirConf.getPath(), res -> {
+            vertx.fileSystem().delete(confService.getWorkerPath() + introConf.getPath() , res -> {
             });
             dirConf.setHave_intro(false);
             dirService.save();

@@ -441,7 +441,7 @@
     function delIntro(name) {
         console.log("删除介绍 -> " + name)
         $.ajax({
-            url: "/admin/dir/intro/" + name,
+            url: "/admin/intro/name/" + name,
             type: "DELETE",
             contentType: "application/json",
             dataType: "json",
@@ -457,7 +457,7 @@
     function newIntro(name) {
         console.log("新建介绍 -> " + name)
         $.ajax({
-            url: "/admin/dir/intro/" + name,
+            url: "/admin/intro/name/" + name,
             type: "POST",
             contentType: "application/json",
             dataType: "json",
@@ -490,7 +490,7 @@
                         render: function (data, type, row, meta) {
                             const name = row[0];
                             let opt = '<button type="button" class="btn btn-primary" onclick="newIntro(\'' + name + '\')">新建介绍页</button> ';
-                            if (data === 0) {
+                            if (data === true) {
                                 opt = ' <button type="button" class="btn btn-info" onclick="editIntro(\'' + name + '\')">修改介绍页</button> <button type="button" class="btn btn-danger" onclick="delIntro(\'' + name + '\')">删除介绍页</button>  ';
                             }
                             return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameModal" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ｜ ' + opt;

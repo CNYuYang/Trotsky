@@ -61,8 +61,9 @@ public class IntroServiceImpl implements IntroService {
 
     @Override
     public boolean addIntro(IntroConf conf) {
-        if (exist(conf.getName())) {
+        if (!exist(conf.getName())) {
             intros.put(conf.getName(), conf);
+            return true;
         }
         return false;
     }
