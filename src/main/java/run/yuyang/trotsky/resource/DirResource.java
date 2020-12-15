@@ -100,6 +100,14 @@ public class DirResource {
     @Path("/change/name")
     public Response changeName(ChangeDirNameParam changeDirNameParam) {
         dirService.changeName(changeDirNameParam.getOldName(), changeDirNameParam.getNewName());
+        String newPath = dirService.getDir(changeDirNameParam.getNewName()).getPath();
+        dirService.getDirs().forEach((k, obj) -> {
+            if (obj.getFather().equals(changeDirNameParam.getOldName())) {
+                obj.setFather(changeDirNameParam.getNewName());
+                obj.setPath(newPath + "/" + obj.getName());
+            }
+        });
+        dirService.save();
         return ResUtils.success();
     }
 
@@ -108,7 +116,7 @@ public class DirResource {
     @Path("/name/{name}")
     public Response delByName(@PathParam("name") String name) {
         DirConf dirConf = dirService.getDir(name);
-        vertx.fileSystem().deleteBlocking(confService.getWorkerPath() +  dirConf.getPath());
+        vertx.fileSystem().deleteBlocking(confService.getWorkerPath() + dirConf.getPath());
         DirConf parent = dirService.getDir(dirConf.getFather());
         parent.setDir_nums(parent.getDir_nums() - 1);
         dirService.delDir(name);
