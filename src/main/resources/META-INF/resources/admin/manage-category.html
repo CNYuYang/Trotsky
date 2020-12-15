@@ -440,10 +440,34 @@
 
     function delIntro(name) {
         console.log("删除介绍 -> " + name)
+        $.ajax({
+            url: "/admin/dir/intro/" + name,
+            type: "DELETE",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                if (data.code === 200) {
+                    console.log("ok")
+                    manageName(op_path);
+                }
+            }
+        })
     }
 
     function newIntro(name) {
         console.log("新建介绍 -> " + name)
+        $.ajax({
+            url: "/admin/dir/intro/" + name,
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                if (data.code === 200) {
+                    console.log("ok")
+                    manageName(op_path);
+                }
+            }
+        })
     }
 
     function editIntro(name) {

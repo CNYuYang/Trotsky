@@ -3,11 +3,13 @@ package run.yuyang.trotsky.resource;
 import io.vertx.core.Vertx;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.DirConf;
+import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.param.ChangeDirNameParam;
 import run.yuyang.trotsky.model.param.NewDirParam;
 import run.yuyang.trotsky.model.vo.TreeVO;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.DirService;
+import run.yuyang.trotsky.service.NoteService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -32,6 +34,9 @@ public class DirResource {
 
     @Inject
     DirService dirService;
+
+    @Inject
+    NoteService noteService;
 
     @GET
     public Response getAll() {
@@ -127,14 +132,38 @@ public class DirResource {
     @DELETE
     @Path("/intro/{name}")
     public Response delDirIntro(@PathParam("name") String name) {
-
+        DirConf dirConf = dirService.getDir(name);
+        DirConf parent = dirService.getDir(dirConf.getFather());
+        dirConf.setType(1);
+        parent.setNote_nums(parent.getNote_nums() + 1);
+        noteService.delNote(name + ".md");
+        noteService.save();
+        dirService.save();
         return ResUtils.success();
     }
 
     @POST
     @Path("/intro/{name}")
     public Response newDirIntro(@PathParam("name") String name) {
+        DirConf dirConf = dirService.getDir(name);
+        DirConf parent = dirService.getDir(dirConf.getFather());
+        NoteConf noteConf = new NoteConf();
+        noteConf.setName(name + ".md");
+        noteConf.setShow(true);
+        noteConf.setFather(dirConf.getFather());
+        noteConf.setDepth(parent.getDepth() + 1);
+        //TODO ID
+        noteConf.setId(0);
+        noteConf.setType(1);
+        noteConf.setPath(parent.getPath() + "/" + name + ".md");
+        vertx.fileSystem().createFile(confService.getWorkerPath() + noteConf.getPath(), res -> {
 
+        });
+        noteService.addNote(noteConf);
+        parent.setNote_nums(parent.getNote_nums() + 1);
+        dirConf.setType(0);
+        noteService.save();
+        dirService.save();
         return ResUtils.success();
     }
 
