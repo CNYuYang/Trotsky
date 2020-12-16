@@ -35,7 +35,7 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="home.html">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
@@ -72,10 +72,10 @@
         </li>
 
         <!-- Nav Item - Tables -->
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" href="manage-category.html">
                 <i class="fas fa-fw fa-table"></i>
-                <span>收纳管理</span></a>
+                <span>分类管理</span></a>
         </li>
 
         <!-- Divider -->
@@ -244,12 +244,12 @@
 </div>
 
 <!-- change name Modal-->
-<div class="modal fade" id="nameModal" tabindex="-1" role="dialog" aria-labelledby="nameModalLabel"
+<div class="modal fade" id="changeDirNameModal" tabindex="-1" role="dialog" aria-labelledby="changeDirNameModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="nameModalLabel">修改分类名称?</h5>
+                <h5 class="modal-title" id="changeDirNameModalLabel">修改分类名称?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -259,28 +259,27 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="changeNameing()">修改</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="changeName()">修改</button>
             </div>
         </div>
     </div>
 </div>
 
-
-<!-- del Modal-->
-<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel"
+<!-- del Dir Modal-->
+<div class="modal fade" id="delDirModal" tabindex="-1" role="dialog" aria-labelledby="delDirModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="delModalLabel">确定删除?</h5>
+                <h5 class="modal-title" id="delDirModalLabel">确定删除?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">删除该分类后，该分类下面的文章和子分类都会被删除哦😯</div>
+            <div class="modal-body">删除该分类后，该分类下面的文章、子分类、介绍页都会被删除哦😯</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
-                <a class="btn btn-danger" onclick="delCate">删除</a>
+                <button class="btn btn-danger" type="button" data-dismiss="modal" onclick="delCate()">删除</button>
             </div>
         </div>
     </div>
@@ -348,7 +347,7 @@
             success: function (data) {
                 if (data.code === 200) {
                     console.log("ok")
-                    manageName(op_path);
+                    manageChild(op_path);
                 }
             }
         })
@@ -370,39 +369,33 @@
             } else if (index > 0) {
                 old_path = old_path + "/" + navs[index];
                 console.log("2->" + navs[index])
-                str = str + '<li class="breadcrumb-item"><a href="#" onclick="manageName(\'' + old_path + '\')">' + navs[index] + '</a></li>'
+                str = str + '<li class="breadcrumb-item"><a href="#" onclick="manageChild(\'' + old_path + '\')">' + navs[index] + '</a></li>'
             }
             index++;
         }
         $(".breadcrumb").html(str);
     }
 
-    function delCate(name) {
+    function delCate() {
         console.log("删除 -> " + name)
         $.ajax({
-            url: "/admin/dir/name/" + name,
+            url: "/admin/dir/name/" + op_name,
             type: "DELETE",
             contentType: "application/json",
             dataType: "json",
             success: function (data) {
                 if (data.code === 200) {
                     console.log("ok")
-                    manageName(op_path);
+                    manageChild(op_path);
                 }
             }
         })
     }
 
-    function changeName(name) {
-        console.log("修改名称 -> " + name)
-        change_name = name;
-        $("#input_change_name").val(name);
-    }
-
-    function changeNameing() {
+    function changeName() {
         const text = $("#input_change_name").val();
         const data = {
-            "oldName": change_name,
+            "oldName": op_name,
             "newName": text
         };
         $.ajax({
@@ -414,13 +407,13 @@
             success: function (data) {
                 if (data.code === 200) {
                     console.log("ok")
-                    manageName(op_path);
+                    manageChild(op_path);
                 }
             }
         })
     }
 
-    function manageName(path) {
+    function manageChild(path) {
         console.log("管理子分类 -> " + path)
         let navs = path.split("/");
         buildNavs(path);
@@ -448,7 +441,7 @@
             success: function (data) {
                 if (data.code === 200) {
                     console.log("ok")
-                    manageName(op_path);
+                    manageChild(op_path);
                 }
             }
         })
@@ -464,7 +457,7 @@
             success: function (data) {
                 if (data.code === 200) {
                     console.log("ok")
-                    manageName(op_path);
+                    manageChild(op_path);
                 }
             }
         })
@@ -472,6 +465,10 @@
 
     function editIntro(name) {
         console.log("编辑介绍 -> " + name)
+    }
+
+    function choose(name) {
+        op_name = name;
     }
 
     getChild("notes", function (child_data) {
@@ -493,7 +490,7 @@
                             if (data === true) {
                                 opt = ' <button type="button" class="btn btn-info" onclick="editIntro(\'' + name + '\')">修改介绍页</button> <button type="button" class="btn btn-danger" onclick="delIntro(\'' + name + '\')">删除介绍页</button>  ';
                             }
-                            return '<button type="button" class="btn btn-warning" onclick="manageName(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameModal" onclick="changeName(\'' + name + '\')">修改名称</button> <button type="button" class="btn btn-danger" onclick="delCate(\'' + name + '\')">删除分类</button> ｜ ' + opt;
+                            return '<button type="button" class="btn btn-warning" onclick="manageChild(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeDirNameModal" onclick="choose(\'' + name + '\');$(\'#input_change_name\').val(\'' + name + '\');">修改名称</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delDirModal" onclick="choose(\'' + name + '\')">删除分类</button> ｜ ' + opt;
                         }
                     }
                 ]

@@ -116,9 +116,16 @@ public class DirResource {
     @Path("/name/{name}")
     public Response delByName(@PathParam("name") String name) {
         DirConf dirConf = dirService.getDir(name);
+        //删除实际文件
         vertx.fileSystem().delete(confService.getWorkerPath() + dirConf.getPath(), res -> {
 
         });
+        if (dirConf.isHave_intro()) {
+            vertx.fileSystem().delete(confService.getWorkerPath() + dirConf.getPath() + ".md", res -> {
+            });
+        }
+        // TODO 移除分类中的子分类与note与介绍
+
         dirService.getDir(dirConf.getFather()).delDir();
         dirService.delDir(name);
         dirService.save();

@@ -92,10 +92,13 @@ public class NoteResource {
     public Response delNotes(@PathParam("name") String name) {
         if (noteService.existNote(name)) {
             NoteConf noteConf = noteService.getNote(name);
+            String father = noteConf.getFather();
             noteService.delNoteAndSave(name);
             vertx.fileSystem().delete(confService.getWorkerPath() + noteConf.getPath(), res -> {
-                
+
             });
+            dirService.getDir(father).delNote();
+            dirService.save();
             return ResUtils.success();
         } else {
             return ResUtils.failure("未找到该文件信息");
