@@ -90,6 +90,7 @@ public class DirResource {
     public Response changeName(ChangeDirNameParam changeDirNameParam) {
         String newName = changeDirNameParam.getNewName();
         String oldName = changeDirNameParam.getOldName();
+        String oldPath = dirService.getDir(oldName).getPath();
         dirService.changeName(oldName, newName);
         String newPath = dirService.getDir(newName).getPath();
         dirService.getDirs().forEach((k, obj) -> {
@@ -98,7 +99,15 @@ public class DirResource {
                 obj.setPath(newPath + "/" + obj.getName());
             }
         });
+        //TODO note也需要处理
         dirService.save();
+        if (dirService.getDir(newName).isHave_intro()) {
+            System.out.println(confService.getWorkerPath() + oldPath + ".md");
+            System.out.println(confService.getWorkerPath() + newPath + ".md");
+            vertx.fileSystem().move(confService.getWorkerPath() + oldPath + ".md", confService.getWorkerPath() + newPath + ".md", res -> {
+
+            });
+        }
         return ResUtils.success();
     }
 
