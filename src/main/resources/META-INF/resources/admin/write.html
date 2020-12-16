@@ -179,9 +179,12 @@
             </div>
 
             <div style="float: right; margin-bottom: 10px;">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importMd">导入笔记</button>
-<!--                <button type="button" class="btn btn-info" onclick="new"> 新建笔记 </button>-->
-                <button class="btn btn-success" onclick="save()">保存文章</button>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importMd">导入笔记
+                    </button>
+                    <!--                <button type="button" class="btn btn-info" onclick="new"> 新建笔记 </button>-->
+                    <button class="btn btn-success" onclick="save()">保存文章</button>
+                </div>
             </div>
 
 
@@ -241,10 +244,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="alert alert-danger" role="alert">
-                    这个地方应该放个tree的，还没来的急，理解万岁！
+                <div class="list-group" id="notes">
+
                 </div>
-                <div id="tree"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
@@ -258,7 +260,6 @@
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/editormd.min.js"></script>
-<script src="../js/bootstrap-treeview.min.js"></script>
 
 <script type="application/javascript">
 
@@ -275,43 +276,34 @@
         });
     });
 
+    let data = [];
+
+    $.ajax({
+        url: "/admin/note/name/all",
+        type: "GET",
+        contentType: "application/json",
+        success: function (data) {
+            if (data.code === 200) {
+                str = "";
+                data.result.forEach(v => {
+                    str = str + '<button type="button" class="list-group-item list-group-item-action" onclick="temp_choose=\'' + v + '\'">' + v + '</button>'
+                })
+                $("#notes").html(str);
+            }
+        }
+    })
+
+    let temp_choose = "";
+
+
     function save() {
         console.log($("#md").val())
     }
 
-    var tree = [];
-
-    $.ajax({
-        url: "/admin/md/info/all",
-        type: "GET",
-        contentType: "application/json",
-        dataType: "json",
-        success: function (data) {
-            data = data.result;
-            data.forEach(obj => {
-                tree.push({
-                    text: obj.name
-                })
-            })
-            $('#tree').treeview({data: tree});
-
-            $('#tree').on('nodeSelected', function (event, data) {
-                selectNode = data.text;
-            });
-
-            $('#tree').on('nodeUnselected', function (event, data) {
-                selectNode = "";
-            });
-
-        }
-    })
-
-    var selectNode = "";
-
     function getText() {
-        if (selectNode !== "") {
+        if (temp_choose !== "") {
             $.ajax({
-                url: "/admin/md/" + selectNode,
+                url: "/admin/note/" + temp_choose,
                 type: "GET",
                 contentType: "application/json",
                 success: function (data) {

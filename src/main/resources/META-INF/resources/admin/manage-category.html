@@ -488,9 +488,9 @@
                             const name = row[0];
                             let opt = '<button type="button" class="btn btn-primary" onclick="newIntro(\'' + name + '\')">新建介绍页</button> ';
                             if (data === true) {
-                                opt = ' <button type="button" class="btn btn-info" onclick="editIntro(\'' + name + '\')">修改介绍页</button> <button type="button" class="btn btn-danger" onclick="delIntro(\'' + name + '\')">删除介绍页</button>  ';
+                                opt = ' <div class="btn-group" role="group" aria-label="First group"> <button type="button" class="btn btn-info" onclick="editIntro(\'' + name + '\')">修改介绍页</button> <button type="button" class="btn btn-danger" onclick="delIntro(\'' + name + '\')">删除介绍页</button>  </div>';
                             }
-                            return '<button type="button" class="btn btn-warning" onclick="manageChild(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeDirNameModal" onclick="choose(\'' + name + '\');$(\'#input_change_name\').val(\'' + name + '\');">修改名称</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delDirModal" onclick="choose(\'' + name + '\')">删除分类</button> ｜ ' + opt;
+                            return ' <div class="btn-group" role="group" aria-label="First group"> <button type="button" class="btn btn-warning" onclick="manageChild(\'' + row[1] + '\')">管理子分类</button> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeDirNameModal" onclick="choose(\'' + name + '\');$(\'#input_change_name\').val(\'' + name + '\');">修改名称</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delDirModal" onclick="choose(\'' + name + '\')">删除分类</button> </div>｜ ' + opt;
                         }
                     }
                 ]

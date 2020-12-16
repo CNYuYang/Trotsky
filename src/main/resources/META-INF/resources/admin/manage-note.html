@@ -327,7 +327,7 @@
                         title: "操作",
                         render: function (data, type, row, meta) {
                             const name = row[0];
-                            return '<button type="button" class="btn btn-warning" onclick="manageNote(\'' + row[1] + '\')">管理文章</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delNoteModal" onclick="choose(\'' + name + '\')">删除文章</button> ';
+                            return ' <div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-warning" onclick="manageNote(\'' + row[1] + '\')">管理文章</button> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delNoteModal" onclick="choose(\'' + name + '\')">删除文章</button> </div>';
                         }
                     }
                 ]
