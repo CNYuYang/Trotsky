@@ -88,15 +88,34 @@ public class NoteResource {
     }
 
     @DELETE
-    @Path("/{name}")
+    @Path("/name/{name}")
     public Response delNotes(@PathParam("name") String name) {
         if (noteService.existNote(name)) {
+            NoteConf noteConf = noteService.getNote(name);
             noteService.delNoteAndSave(name);
+            vertx.fileSystem().delete(confService.getWorkerPath() + noteConf.getPath(), res -> {
+                
+            });
             return ResUtils.success();
         } else {
             return ResUtils.failure("未找到该文件信息");
         }
     }
 
+    @GET
+    @Path("/table/all")
+    public Response getNotes() {
+        List<List<Object>> list = new LinkedList<>();
+        noteService.getNotes().forEach((k, obj) -> {
+            List<Object> item = new LinkedList<>();
+            item.add(obj.getName());
+            item.add(obj.getPath());
+            item.add(obj.getFather());
+            item.add(obj.getShow());
+            item.add(0);
+            list.add(item);
+        });
+        return ResUtils.success(list);
+    }
 
 }
