@@ -78,6 +78,15 @@ public class IntroServiceImpl implements IntroService {
     }
 
     @Override
+    public boolean existNoteAndDisk(String name) {
+        boolean status = exist(name);
+        if (status) {
+            status = vertx.fileSystem().existsBlocking(confService.getWorkerPath() + getIntro(name).getPath());
+        }
+        return status;
+    }
+
+    @Override
     public void save() {
         JsonArray array = new JsonArray();
         intros.forEach((k, into) -> {

@@ -119,4 +119,13 @@ public class NoteServiceImpl implements NoteService {
         return status;
     }
 
+    @Override
+    public boolean existNoteAndDisk(String name) {
+        boolean status = existNote(name);
+        if (status) {
+            status = vertx.fileSystem().existsBlocking(confService.getWorkerPath() + getNote(name).getPath());
+        }
+        return status;
+    }
+
 }

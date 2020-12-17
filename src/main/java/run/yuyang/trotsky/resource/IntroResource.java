@@ -41,10 +41,11 @@ public class IntroResource {
     @Path("/{name}")
     public Response getDirIntro(@PathParam("name") String name) {
         FileSystem fileSystem = vertx.fileSystem();
-        if (introService.exist(name) && fileSystem.existsBlocking(confService.getWorkerPath() + introService.getIntro(name).getPath())) {
+        if (introService.existNoteAndDisk(name)) {
             return ResUtils.success(fileSystem.readFileBlocking(confService.getWorkerPath() + introService.getIntro(name).getPath()).toString());
+        } else {
+            return ResUtils.failure("数据库或者磁盘上未找到该介绍页。");
         }
-        return null;
     }
 
 
@@ -88,10 +89,14 @@ public class IntroResource {
     @PUT
     @Path("/{name}")
     public Response updateText(@PathParam("name") String name, TextParam textParam) {
-        IntroConf intro = introService.getIntro(name);
-        vertx.fileSystem().writeFile(confService.getWorkerPath() + intro.getPath(), Buffer.buffer(textParam.getText()), res -> {
+        if (introService.existNoteAndDisk(name)) {
+            IntroConf intro = introService.getIntro(name);
+            vertx.fileSystem().writeFile(confService.getWorkerPath() + intro.getPath(), Buffer.buffer(textParam.getText()), res -> {
 
-        });
-        return ResUtils.success();
+            });
+            return ResUtils.success();
+        } else {
+            return ResUtils.failure("数据库或者磁盘上未找到该介绍页。");
+        }
     }
 }

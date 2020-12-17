@@ -71,10 +71,11 @@ public class NoteResource {
     @Path("/{name}")
     public Response getText(@PathParam("name") String name) {
         FileSystem fileSystem = vertx.fileSystem();
-        if (noteService.existNote(name) && fileSystem.existsBlocking(confService.getWorkerPath() + noteService.getNote(name).getPath())) {
+        if (noteService.existNoteAndDisk(name)) {
             return ResUtils.success(fileSystem.readFileBlocking(confService.getWorkerPath() + noteService.getNote(name).getPath()).toString());
+        } else {
+            return ResUtils.failure("数据库或者磁盘上未找到该笔记。");
         }
-        return null;
     }
 
 
@@ -132,10 +133,13 @@ public class NoteResource {
     @PUT
     @Path("/{name}")
     public Response updateText(@PathParam("name") String name, TextParam textParam) {
-        NoteConf noteConf = noteService.getNote(name);
-        vertx.fileSystem().writeFile(confService.getWorkerPath() + noteConf.getPath(), Buffer.buffer(textParam.getText()), res -> {
-
-        });
-        return ResUtils.success();
+        if (noteService.existNoteAndDisk(name)) {
+            NoteConf noteConf = noteService.getNote(name);
+            vertx.fileSystem().writeFile(confService.getWorkerPath() + noteConf.getPath(), Buffer.buffer(textParam.getText()), res -> {
+            });
+            return ResUtils.success();
+        } else {
+            return ResUtils.failure("数据库或者磁盘上未找到该笔记。");
+        }
     }
 }

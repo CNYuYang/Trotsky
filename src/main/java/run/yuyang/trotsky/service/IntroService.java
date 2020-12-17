@@ -17,4 +17,7 @@ public interface IntroService extends SerializableService {
 
     boolean addIntroAndSave(IntroConf conf);
 
+    boolean existNoteAndDisk(String name);
+
+
 }

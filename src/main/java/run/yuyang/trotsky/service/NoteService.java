@@ -21,4 +21,6 @@ public interface NoteService extends SerializableService {
 
     boolean delNoteAndSave(String name);
 
+    boolean existNoteAndDisk(String name);
+
 }
