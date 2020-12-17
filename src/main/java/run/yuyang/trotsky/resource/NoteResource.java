@@ -69,9 +69,6 @@ public class NoteResource {
     @Path("/{name}")
     public Response getText(@PathParam("name") String name) {
         FileSystem fileSystem = vertx.fileSystem();
-        System.out.println(noteService.existNote(name));
-        System.out.println(confService.getWorkerPath() + noteService.getNote(name).getPath());
-        System.out.println(fileSystem.existsBlocking(confService.getWorkerPath() + noteService.getNote(name).getPath()));
         if (noteService.existNote(name) && fileSystem.existsBlocking(confService.getWorkerPath() + noteService.getNote(name).getPath())) {
             return ResUtils.success(fileSystem.readFileBlocking(confService.getWorkerPath() + noteService.getNote(name).getPath()).toString());
         }

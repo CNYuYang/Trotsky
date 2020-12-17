@@ -180,7 +180,9 @@
 
             <div style="float: right; margin-bottom: 10px;">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importMd">导入笔记
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importNote">导入笔记
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#importIntro">导入介绍页
                     </button>
                     <!--                <button type="button" class="btn btn-info" onclick="new"> 新建笔记 </button>-->
                     <button class="btn btn-success" onclick="save()">保存文章</button>
@@ -231,9 +233,8 @@
     </div>
 </div>
 
-
-<!-- Logout Modal-->
-<div class="modal fade" id="importMd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!-- import Modal-->
+<div class="modal fade" id="importNote" tabindex="-1" role="dialog" aria-labelledby="importNoteLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -245,7 +246,6 @@
             </div>
             <div class="modal-body">
                 <div class="list-group" id="notes">
-
                 </div>
             </div>
             <div class="modal-footer">
@@ -255,6 +255,30 @@
         </div>
     </div>
 </div>
+
+<!-- import Intro-->
+<div class="modal fade" id="importIntro" tabindex="-1" role="dialog" aria-labelledby="importIntroLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑已有笔记</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group" id="intros">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <button class="btn btn-primary" type="button" data-dismiss="modal" onclick="getText()">导入</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Bootstrap core JavaScript-->
 <script src="../js/jquery-3.3.1.min.js"></script>
@@ -276,8 +300,6 @@
         });
     });
 
-    let data = [];
-
     $.ajax({
         url: "/admin/note/name/all",
         type: "GET",
@@ -286,14 +308,32 @@
             if (data.code === 200) {
                 str = "";
                 data.result.forEach(v => {
-                    str = str + '<button type="button" class="list-group-item list-group-item-action" onclick="temp_choose=\'' + v + '\'">' + v + '</button>'
+                    str = str + '<button type="button" class="list-group-item list-group-item-action" onclick="temp_choose=\'' + v + '\';choose_type=\'note\'">' + v + '</button>'
                 })
                 $("#notes").html(str);
             }
         }
     })
 
+    $.ajax({
+        url: "/admin/intro/name/all",
+        type: "GET",
+        contentType: "application/json",
+        success: function (data) {
+            if (data.code === 200) {
+                str = "";
+                data.result.forEach(v => {
+                    str = str + '<button type="button" class="list-group-item list-group-item-action" onclick="temp_choose=\'' + v + '\';choose_type=\'intro\'">' + v + '</button>'
+                })
+                $("#intros").html(str);
+            }
+        }
+    })
+
+
     let temp_choose = "";
+
+    let choose_type = "";
 
 
     function save() {
@@ -301,15 +341,29 @@
     }
 
     function getText() {
-        if (temp_choose !== "") {
-            $.ajax({
-                url: "/admin/note/" + temp_choose,
-                type: "GET",
-                contentType: "application/json",
-                success: function (data) {
-                    editor.setMarkdown(data.result);
-                }
-            })
+        if (temp_choose !== "" && choose_type !== "") {
+            if (choose_type === 'note') {
+                $.ajax({
+                    url: "/admin/note/" + temp_choose,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function (data) {
+                        editor.setMarkdown(data.result);
+                    }
+                })
+            }
+
+            if (choose_type === 'intro') {
+                $.ajax({
+                    url: "/admin/intro/" + temp_choose,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function (data) {
+                        editor.setMarkdown(data.result);
+                    }
+                })
+            }
+
         }
     }
 </script>

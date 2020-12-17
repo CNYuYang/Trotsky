@@ -1,6 +1,7 @@
 package run.yuyang.trotsky.resource;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.file.FileSystem;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.IntroConf;
@@ -33,6 +34,16 @@ public class IntroResource {
     @Inject
     DirService dirService;
 
+    @GET
+    @Path("/{name}")
+    public Response getDirIntro(@PathParam("name") String name) {
+        FileSystem fileSystem = vertx.fileSystem();
+        if (introService.exist(name) && fileSystem.existsBlocking(confService.getWorkerPath() + introService.getIntro(name).getPath())) {
+            return ResUtils.success(fileSystem.readFileBlocking(confService.getWorkerPath() + introService.getIntro(name).getPath()).toString());
+        }
+        return null;
+    }
+
 
     @DELETE
     @Path("/name/{name}")
@@ -40,7 +51,7 @@ public class IntroResource {
         DirConf dirConf = dirService.getDir(name);
         IntroConf introConf = introService.getIntro(name);
         if (introService.delIntroAndSave(name)) {
-            vertx.fileSystem().delete(confService.getWorkerPath() + introConf.getPath() , res -> {
+            vertx.fileSystem().delete(confService.getWorkerPath() + introConf.getPath(), res -> {
             });
             dirConf.setHave_intro(false);
             dirService.save();
@@ -63,6 +74,12 @@ public class IntroResource {
             dirService.save();
         }
         return ResUtils.success();
+    }
+
+    @GET
+    @Path("/name/all")
+    public Response getAllName() {
+        return ResUtils.success(dirService.getDirs().keySet());
     }
 
 }
