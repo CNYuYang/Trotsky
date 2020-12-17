@@ -337,9 +337,22 @@
 
     let choose_type = "";
 
+    let editText = "";
+
 
     function save() {
-        console.log($("#md").val())
+        const data = {
+            "text": $("#md").val()
+        }
+        $.ajax({
+            url: "/admin/" + choose_type + "/" + editText,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (data) {
+                console.log(data);
+            }
+        })
     }
 
     function getText() {
@@ -357,6 +370,7 @@
                         str = '<span class="badge badge-secondary">' + temp_choose + '</span>';
                     }
                     $("#editTitle").html(str);
+                    editText = temp_choose;
                 }
             })
         }

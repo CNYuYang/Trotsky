@@ -1,10 +1,12 @@
 package run.yuyang.trotsky.resource;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.NoteConf;
 import run.yuyang.trotsky.model.param.MDParam;
+import run.yuyang.trotsky.model.param.base.TextParam;
 import run.yuyang.trotsky.model.vo.TreeVO;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.DirService;
@@ -127,4 +129,13 @@ public class NoteResource {
         return ResUtils.success(noteService.getNotes().keySet());
     }
 
+    @PUT
+    @Path("/{name}")
+    public Response updateText(@PathParam("name") String name, TextParam textParam) {
+        NoteConf noteConf = noteService.getNote(name);
+        vertx.fileSystem().writeFile(confService.getWorkerPath() + noteConf.getPath(), Buffer.buffer(textParam.getText()), res -> {
+
+        });
+        return ResUtils.success();
+    }
 }

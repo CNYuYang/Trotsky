@@ -1,10 +1,13 @@
 package run.yuyang.trotsky.resource;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 import run.yuyang.trotsky.commom.utils.ResUtils;
 import run.yuyang.trotsky.model.conf.DirConf;
 import run.yuyang.trotsky.model.conf.IntroConf;
+import run.yuyang.trotsky.model.conf.NoteConf;
+import run.yuyang.trotsky.model.param.base.TextParam;
 import run.yuyang.trotsky.service.ConfService;
 import run.yuyang.trotsky.service.DirService;
 import run.yuyang.trotsky.service.IntroService;
@@ -82,4 +85,13 @@ public class IntroResource {
         return ResUtils.success(dirService.getDirs().keySet());
     }
 
+    @PUT
+    @Path("/{name}")
+    public Response updateText(@PathParam("name") String name, TextParam textParam) {
+        IntroConf intro = introService.getIntro(name);
+        vertx.fileSystem().writeFile(confService.getWorkerPath() + intro.getPath(), Buffer.buffer(textParam.getText()), res -> {
+
+        });
+        return ResUtils.success();
+    }
 }
